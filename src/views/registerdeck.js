@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -8,17 +8,20 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const RegisterDeck = ({navigation}) => {
+  const [deckname, setDeckname] = useState('');
   return (
     <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.searchCards}
         placeholder={'Qual o nome do seu deck?'}
         placeholderTextColor="#fff"
+        onChangeText={(text) => setDeckname(text)}
+        value={deckname}
       />
       <TouchableOpacity
         style={styles.btnArrow}
         onPress={() => {
-          navigation.navigate('SelectCard');
+          navigation.navigate('SelectCard', {deckname: deckname});
         }}>
         <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>

@@ -12,14 +12,31 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../../src/services/useDataApi';
 
-const SelectCard = ({navigation}) => {
+const SelectCard = ({navigation, route}) => {
+  const {deckname} = route.params;
   const data = useDataApi();
+
+  // O Cards serve para mostrar em lista todas as cartas
   const [cards, setCards] = useState([]);
 
   const searchCards = (value) => {
     const cardsFilter = data.filter(({name}) => name.includes(value));
     setCards(cardsFilter);
   };
+
+  console.warn(deckname);
+
+  const [cardSelect, setCardSelect] = useState([]);
+
+  // Salva a carta selecionada em um state
+  // item quando clicar e adicionar a todo este state.
+
+  const saveSelect = (item) => {
+    const card = item.name;
+    setCardSelect([card, ...cardSelect]);
+  };
+
+  console.warn('cardSelect', cardSelect);
 
   const renderItem = ({item, index}) => (
     <View style={styles.cards} key={index}>
@@ -30,7 +47,9 @@ const SelectCard = ({navigation}) => {
         <Image style={styles.imgCard} source={{uri: item.image_uris.normal}} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttonAdd}>
+      <TouchableOpacity
+        style={styles.buttonAdd}
+        onPress={() => saveSelect(item)}>
         <Text style={styles.textAdd}>adicionar</Text>
       </TouchableOpacity>
     </View>
@@ -44,8 +63,12 @@ const SelectCard = ({navigation}) => {
         placeholderTextColor="#fff"
         onChangeText={(value) => searchCards(value)}
       />
-      <TouchableOpacity style={styles.btnArrow}>
-        <Icon name="search" style={styles.arrow} />
+      <TouchableOpacity
+        style={styles.btnArrow}
+        onPress={() => {
+          navigation.navigate('Deck', {deckname: deckname, cards: cardSelect});
+        }}>
+        <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>
 
       <FlatList
