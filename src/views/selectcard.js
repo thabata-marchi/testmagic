@@ -24,8 +24,6 @@ const SelectCard = ({navigation, route}) => {
     setCards(cardsFilter);
   };
 
-  console.warn(deckname);
-
   const [cardSelect, setCardSelect] = useState([]);
 
   // Salva a carta selecionada em um state
@@ -35,8 +33,6 @@ const SelectCard = ({navigation, route}) => {
     const card = item.name;
     setCardSelect([card, ...cardSelect]);
   };
-
-  console.warn('cardSelect', cardSelect);
 
   const renderItem = ({item, index}) => (
     <View style={styles.cards} key={index}>
