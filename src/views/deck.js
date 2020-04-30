@@ -1,12 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {SafeAreaView, View, Text, FlatList, StyleSheet} from 'react-native';
 
 const Deck = ({route}) => {
   const {deckname, cards} = route.params;
@@ -26,19 +19,25 @@ const Deck = ({route}) => {
     console.warn(item);
   };
 
-  const renderDecks = ({item, index}) => {
+  const renderDecks = ({item, index}) => (
     <View style={styles.cards} key={index}>
-      <Text style={styles.textDeck}>TESTE {item.decks.deckname}</Text>
-
-      <TouchableOpacity style={styles.buttonAdd} onPress={() => saveItem(item)}>
-        <Text style={styles.textAdd}>adicionar</Text>
-      </TouchableOpacity>
-    </View>;
-  };
+      <Text style={styles.textDeck}>{item.decks.deckname}</Text>
+      <FlatList
+        data={item.decks.cards}
+        keyExtractor={(i) => i}
+        numColumns={1}
+        renderItem={() => (
+          <Text style={styles.textDeck}>{item.decks.cards}</Text>
+        )}
+      />
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.textDeck}>TESTE</Text>
+      <Text style={styles.textDeck}>
+        Visualização do Deck criado. Seria isso mesmo? Podemos continuar?
+      </Text>
       <FlatList
         data={arrDeck}
         keyExtractor={(item) => item}
@@ -62,6 +61,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 20,
     marginTop: 30,
+    textAlign: 'center',
   },
 
   buttonAdd: {
