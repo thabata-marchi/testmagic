@@ -14,16 +14,12 @@ import useDataApi from '../../src/services/useDataApi';
 
 const SelectCard = ({navigation, route}) => {
   const {deckname} = route.params;
+
   const data = useDataApi();
+  const [textInput, setTextInput] = useState('');
 
   // O Cards serve para mostrar em lista todas as cartas
   const [cards, setCards] = useState([]);
-
-  const searchCards = (value) => {
-    const cardsFilter = data.filter(({name}) => name.includes(value));
-    setCards(cardsFilter);
-  };
-
   const [cardSelect, setCardSelect] = useState([]);
 
   // Salva a carta selecionada em um state
@@ -32,6 +28,15 @@ const SelectCard = ({navigation, route}) => {
   const saveSelect = (item) => {
     const card = item.name;
     setCardSelect([card, ...cardSelect]);
+  };
+
+  const searchCards = (textInput) => {
+    if (textInput === '') {
+      alert('Busque suas cartas!');
+      return;
+    }
+    const cardsFilter = data.filter(({name}) => name.includes(textInput));
+    textInput.length > 0 ? setCards(cardsFilter) : null;
   };
 
   const renderItem = ({item, index}) => (
@@ -57,22 +62,40 @@ const SelectCard = ({navigation, route}) => {
         style={styles.searchCards}
         placeholder={'Escolha as cartas'}
         placeholderTextColor="#fff"
-        onChangeText={(value) => searchCards(value)}
+        onChangeText={(text) => setTextInput(text)}
       />
       <TouchableOpacity
         style={styles.btnArrow}
-        onPress={() => {
-          navigation.navigate('Deck', {deckname: deckname, cards: cardSelect});
-        }}>
-        <Icon name="chevron-right" style={styles.arrow} />
+        onPress={() => searchCards(textInput)}>
+        <Icon name="search" style={styles.arrow} />
       </TouchableOpacity>
-
-      <FlatList
-        data={cards}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        renderItem={renderItem}
-      />
+      {textInput.length > 0 ? (
+        <FlatList
+          data={cards}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          renderItem={renderItem}
+        />
+      ) : null}
+      {cardSelect.length > 0 ? (
+        <View style={styles.cardSelected}>
+          <Text style={styles.textCardsH1}>
+            Você selecionou as seguintes cartas:
+          </Text>
+          <Text style={styles.textCards}>{cardSelect}</Text>
+          <TouchableOpacity
+            style={styles.btnStartGo}
+            onPress={() =>
+              navigation.navigate('Deck', {
+                deckname: deckname,
+                cards: cardSelect,
+              })
+            }>
+            <Text style={styles.textStartGo}>Continue</Text>
+            <Icon name="chevron-right" style={styles.startGo} />
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -117,10 +140,23 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     fontSize: 32,
   },
-
+  btnStartGo: {
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  startGo: {
+    color: '#fff',
+    fontSize: 32,
+  },
   buttonAdd: {
     alignItems: 'center',
     marginTop: 5,
+  },
+  textStartGo: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    lineHeight: 33,
   },
   textAdd: {
     fontSize: 18,
@@ -133,6 +169,19 @@ const styles = StyleSheet.create({
   imgCard: {
     width: 160,
     height: 220,
+  },
+  cardSelected: {
+    margin: 30,
+  },
+  textCardsH1: {
+    fontSize: 19,
+    marginBottom: 10,
+    color: '#FFF',
+    fontWeight: '500',
+  },
+  textCards: {
+    color: '#FFF',
+    fontSize: 15,
   },
 });
 

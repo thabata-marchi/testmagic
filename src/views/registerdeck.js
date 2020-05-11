@@ -15,6 +15,7 @@ const RegisterDeck = ({navigation}) => {
         style={styles.searchCards}
         placeholder={'Qual o nome do seu deck?'}
         placeholderTextColor="#fff"
+        underlineColorAndroid="transparent"
         onChangeText={(text) => setDeckname(text)}
         value={deckname}
       />
