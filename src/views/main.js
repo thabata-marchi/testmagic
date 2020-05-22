@@ -1,11 +1,21 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, SafeAreaView, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {store} from '../store';
 
 const Main = ({navigation}) => {
+  const globalState = useContext(store);
+  console.warn(globalState);
+  const {deckname, cards} = globalState;
+
   return (
     <>
       <SafeAreaView style={styles.container}>
+        {deckname && cards === '' ? (
+          // Este Deckname será um LINK que vai para o componente específico dele, ou seja, deve ser um FlatList
+          <Text style={styles.h1}>{deckname}</Text>
+        ) : null}
+
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('ListDeck');

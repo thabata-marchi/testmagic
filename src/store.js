@@ -1,9 +1,11 @@
 import React, {useReducer} from 'react';
 
 const initialState = {
-  deckname: 'Crie o nome do seu DECK!',
-  cards: 'Escolha suas cartas!',
+  deckname: '',
+  cards: '',
 };
+const store = React.createContext(initialState);
+const {Provider} = store;
 
 const actions = {
   SET_DECKNAME: 'SET_DECKNAME',
@@ -17,13 +19,11 @@ const reducer = (state, action) => {
     case action.SET_CARDS:
       return {...state, cards: action.value};
     default:
-      return state;
+      throw new Error();
   }
 };
 
-const MagicContext = React.createContext();
-
-const Provider = ({children}) => {
+const StateProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const valueData = {
@@ -37,9 +37,7 @@ const Provider = ({children}) => {
     },
   };
 
-  return (
-    <MagicContext.Provider value={valueData}>{children}</MagicContext.Provider>
-  );
+  return <Provider value={valueData}>{children}</Provider>;
 };
 
-export default Provider;
+export {store, StateProvider};
