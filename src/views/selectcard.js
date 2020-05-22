@@ -11,15 +11,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../../src/services/useDataApi';
+import useReposData from '../components/useReposData';
 
 const SelectCard = ({navigation, route}) => {
-  const {deckname} = route.params;
+  const {id, deckname, cards} = route.params;
+  useReposData({id: id, deckname: deckname, cards: cards});
 
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
 
   // O Cards serve para mostrar em lista todas as cartas
-  const [cards, setCards] = useState([]);
+  const [cardsAdd, setCardsAdd] = useState([]);
   const [cardSelect, setCardSelect] = useState([]);
 
   // Salva a carta selecionada em um state
@@ -30,13 +32,13 @@ const SelectCard = ({navigation, route}) => {
     setCardSelect([card, ...cardSelect]);
   };
 
-  const searchCards = (textInput) => {
-    if (textInput === '') {
-      alert('Busque suas cartas!');
+  const searchCards = (value) => {
+    if (value === '') {
+      //alert('Busque suas cartas!');
       return;
     }
     const cardsFilter = data.filter(({name}) => name.includes(textInput));
-    textInput.length > 0 ? setCards(cardsFilter) : null;
+    textInput.length > 0 ? setCardsAdd(cardsFilter) : null;
   };
 
   const renderItem = ({item, index}) => (
@@ -71,7 +73,7 @@ const SelectCard = ({navigation, route}) => {
       </TouchableOpacity>
       {textInput.length > 0 ? (
         <FlatList
-          data={cards}
+          data={cardsAdd}
           keyExtractor={(item) => item.id}
           numColumns={2}
           renderItem={renderItem}
@@ -87,6 +89,7 @@ const SelectCard = ({navigation, route}) => {
             style={styles.btnStartGo}
             onPress={() =>
               navigation.navigate('Deck', {
+                id: id,
                 deckname: deckname,
                 cards: cardSelect,
               })

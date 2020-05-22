@@ -1,50 +1,46 @@
-import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, Text, FlatList, StyleSheet} from 'react-native';
+import React, {useEffect} from 'react';
+import {SafeAreaView, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const Deck = ({route}) => {
+const Deck = ({navigation, route}) => {
   const {deckname, cards} = route.params;
 
-  const [arrDeck, setArrDeck] = useState([]);
-
   useEffect(() => {
-    let deckSum = JSON.stringify([{decks: {deckname: deckname, cards: cards}}]);
-    deckSum = JSON.parse(deckSum);
-    setArrDeck(deckSum);
-  }, [deckname, cards]);
+    async () => {
+      try {
+        const myDeck = JSON.stringify([
+          {decks: {deckname: deckname, cards: cards}},
+        ]);
+        await AsyncStorage.setItem('myDeck', myDeck);
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+  }, [myDeck]);
 
-  console.log('arrDeck', arrDeck);
-  console.log('arrDeck', arrDeck.length);
-
-  const saveItem = (item) => {
-    console.warn(item);
+  const saveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('myDeck');
+      if (value !== null) {
+        navigation.navigate('ListDeck', {myDeck: value});
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   };
-
-  const renderDecks = ({item, index}) => (
-    <View style={styles.cards} key={index}>
-      <Text style={styles.textDeck}>{item.decks.deckname}</Text>
-      <FlatList
-        data={item.decks.cards}
-        keyExtractor={(i) => i}
-        numColumns={1}
-        renderItem={() => (
-          <Text style={styles.textDeck}>{item.decks.cards}</Text>
-        )}
-      />
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.textDeck}>
-        Visualização do Deck criado. Seria isso mesmo? Podemos continuar?
-      </Text>
-      <FlatList
-        data={arrDeck}
-        keyExtractor={(item) => item}
-        numColumns={1}
-        renderItem={renderDecks}
-      />
-      <Text style={styles.textDeck}>{arrDeck.deckname}</Text>
+      <Text style={styles.textDeck}>Deck {deckname} criado com sucesso!</Text>
+      <TouchableOpacity
+        style={styles.btnPlay}
+        onPress={() => {
+          saveData();
+        }}>
+        <Text style={styles.textDeck} onPress={saveData}>
+          Voltar para os meus decks!
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

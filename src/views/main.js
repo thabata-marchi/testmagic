@@ -6,12 +6,15 @@ const Main = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.h1}>Meus Decks</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ListDeck');
+          }}>
+          <Text style={styles.h1}>Meus Decks</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.btnPlay}
-          onPress={() => {
-            navigation.navigate('RegisterDeck');
-          }}>
+          onPress={() => navigation.navigate('RegisterDeck')}>
           <Icon name="add" style={styles.play} />
         </TouchableOpacity>
       </SafeAreaView>

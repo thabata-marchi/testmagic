@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const RegisterDeck = ({navigation}) => {
   const [deckname, setDeckname] = useState('');
+
   return (
     <SafeAreaView style={styles.container}>
       <TextInput
@@ -22,7 +23,9 @@ const RegisterDeck = ({navigation}) => {
       <TouchableOpacity
         style={styles.btnArrow}
         onPress={() => {
-          navigation.navigate('SelectCard', {deckname: deckname});
+          navigation.navigate('SelectCard', {
+            deckname: deckname,
+          });
         }}>
         <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>
