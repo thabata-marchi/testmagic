@@ -5,23 +5,15 @@ import {store} from '../store';
 
 const Main = ({navigation}) => {
   const globalState = useContext(store);
-  console.warn(globalState);
-  const {deckname, cards} = globalState;
+  const {decks, deckname, cards} = globalState;
+
+  console.warn('MAIN: decks', decks);
+  console.warn('MAIN: deckname e cards', deckname, cards);
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        {deckname && cards === '' ? (
-          // Este Deckname será um LINK que vai para o componente específico dele, ou seja, deve ser um FlatList
-          <Text style={styles.h1}>{deckname}</Text>
-        ) : null}
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('ListDeck');
-          }}>
-          <Text style={styles.h1}>Meus Decks</Text>
-        </TouchableOpacity>
+        <Text style={styles.h1}>Meus Decks</Text>
         <TouchableOpacity
           style={styles.btnPlay}
           onPress={() => navigation.navigate('RegisterDeck')}>

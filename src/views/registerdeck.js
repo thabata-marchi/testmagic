@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {store} from '../store';
 
 const RegisterDeck = ({navigation}) => {
-  const [deckname, setDeckname] = useState('');
+  const globalState = useContext(store);
+  const {deckname, setDeckname} = globalState;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,9 +25,7 @@ const RegisterDeck = ({navigation}) => {
       <TouchableOpacity
         style={styles.btnArrow}
         onPress={() => {
-          navigation.navigate('SelectCard', {
-            deckname: deckname,
-          });
+          navigation.navigate('SelectCard');
         }}>
         <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>

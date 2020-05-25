@@ -1,45 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import {SafeAreaView, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import {store} from '../store';
 
-const Deck = ({navigation, route}) => {
-  const {deckname, cards} = route.params;
-
-  useEffect(() => {
-    async () => {
-      try {
-        const myDeck = JSON.stringify([
-          {decks: {deckname: deckname, cards: cards}},
-        ]);
-        await AsyncStorage.setItem('myDeck', myDeck);
-      } catch (e) {
-        console.warn(e);
-      }
-    };
-  }, [myDeck]);
-
-  const saveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('myDeck');
-      if (value !== null) {
-        navigation.navigate('ListDeck', {myDeck: value});
-      }
-    } catch (e) {
-      console.warn(e);
-    }
-  };
+const Deck = ({navigation}) => {
+  const globalState = useContext(store);
+  const {deckname, cards} = globalState;
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.textDeck}>Deck {deckname} criado com sucesso!</Text>
+      <Text style={styles.textDeck}>{cards}</Text>
       <TouchableOpacity
         style={styles.btnPlay}
         onPress={() => {
-          saveData();
+          navigation.navigate('Main');
         }}>
-        <Text style={styles.textDeck} onPress={saveData}>
-          Voltar para os meus decks!
-        </Text>
+        <Text style={styles.textDeck}>Voltar para os meus myDecks!</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

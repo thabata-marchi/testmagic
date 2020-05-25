@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,25 +11,21 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../../src/services/useDataApi';
-import useReposData from '../components/useReposData';
+import {store} from '../store';
 
-const SelectCard = ({navigation, route}) => {
-  const {id, deckname, cards} = route.params;
-  useReposData({id: id, deckname: deckname, cards: cards});
+const SelectCard = ({navigation}) => {
+  const globalState = useContext(store);
+  const {cards, setCards} = globalState;
 
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
 
   // O Cards serve para mostrar em lista todas as cartas
   const [cardsAdd, setCardsAdd] = useState([]);
-  const [cardSelect, setCardSelect] = useState([]);
-
-  // Salva a carta selecionada em um state
-  // item quando clicar e adicionar a todo este state.
 
   const saveSelect = (item) => {
     const card = item.name;
-    setCardSelect([card, ...cardSelect]);
+    setCards([card, ...cards]);
   };
 
   const searchCards = (value) => {
@@ -79,21 +75,15 @@ const SelectCard = ({navigation, route}) => {
           renderItem={renderItem}
         />
       ) : null}
-      {cardSelect.length > 0 ? (
-        <View style={styles.cardSelected}>
+      {cards.length > 0 ? (
+        <View style={styles.cardsed}>
           <Text style={styles.textCardsH1}>
             Você selecionou as seguintes cartas:
           </Text>
-          <Text style={styles.textCards}>{cardSelect}</Text>
+          <Text style={styles.textCards}>{cards}</Text>
           <TouchableOpacity
             style={styles.btnStartGo}
-            onPress={() =>
-              navigation.navigate('Deck', {
-                id: id,
-                deckname: deckname,
-                cards: cardSelect,
-              })
-            }>
+            onPress={() => navigation.navigate('Deck')}>
             <Text style={styles.textStartGo}>Continue</Text>
             <Icon name="chevron-right" style={styles.startGo} />
           </TouchableOpacity>
