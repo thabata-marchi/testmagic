@@ -1,71 +1,25 @@
-import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useContext} from 'react';
+import {SafeAreaView, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {store} from '../store';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const ListDecks = ({navigation, route}) => {
-  const {myDeck} = route.params;
-
-  const navigateSaveInfo = () => {
-    navigation.navigate('RegisterDeck', {
-      myDeck: myDeck,
-    });
-  };
-
-  console.warn('myDeck', myDeck);
-  const [listDeck, setListDeck] = useState([]);
-
-  useEffect(() => {
-    setListDeck(JSON.parse(myDeck));
-  }, [myDeck]);
-
-  console.warn('listDeck', listDeck);
-  const renderDecks = ({item, index}) => (
-    <View style={styles.cards} key={index}>
-      <Text style={styles.textDeck}>
-        Deck {item.decks.id}: {item.decks.deckname}
-      </Text>
-      <FlatList
-        data={item.decks.cards}
-        keyExtractor={(i) => i}
-        numColumns={1}
-        renderItem={() => (
-          <Text style={styles.textDeck}>{item.decks.cards}</Text>
-        )}
-      />
-    </View>
-  );
+const Deck = ({navigation}) => {
+  const globalState = useContext(store);
+  const {deckname, cards} = globalState;
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.h1}>Meus Decks</Text>
-        <FlatList
-          data={listDeck}
-          keyExtractor={(item) => item}
-          numColumns={1}
-          renderItem={renderDecks}
-        />
-        <Text style={styles.textDeck}>{listDeck.deckname}</Text>
-        <TouchableOpacity
-          style={styles.btnPlay}
-          onPress={() => {
-            navigateSaveInfo();
-          }}>
-          <Icon name="add" style={styles.play} />
-        </TouchableOpacity>
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.textDeck}>Deck {deckname}</Text>
+      <Text style={styles.textDeck}>{cards}</Text>
+
+      <TouchableOpacity
+        style={styles.btnPlay}
+        onPress={() => navigation.navigate('Main')}>
+        <Icon name="forward" style={styles.play} />
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
-
-export default ListDecks;
 
 const styles = StyleSheet.create({
   container: {
@@ -74,24 +28,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#1d1c25',
   },
-  h1: {
-    fontSize: 30,
-    margin: 20,
-    color: '#FFF',
-    fontFamily: 'Helvetica Neue',
-  },
+
   textDeck: {
     color: '#FFF',
     fontSize: 20,
     marginTop: 30,
     textAlign: 'center',
   },
+
+  buttonAdd: {
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  textAdd: {
+    fontSize: 18,
+    padding: 5,
+    color: '#FFFFFF',
+  },
   btnPlay: {
     backgroundColor: '#5e4f67',
     borderRadius: 50,
     width: 60,
     height: 60,
-    marginBottom: 10,
+    marginTop: 20,
   },
   play: {
     color: '#fff',
@@ -100,3 +59,5 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
 });
+
+export default Deck;
