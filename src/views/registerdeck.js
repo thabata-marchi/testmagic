@@ -10,7 +10,14 @@ import {store} from '../store';
 
 const RegisterDeck = ({navigation}) => {
   const globalState = useContext(store);
-  const {deckname, setDeckname} = globalState;
+  const {addDeck} = globalState;
+
+  console.warn('globalState', globalState);
+  console.warn('addDeck', addDeck);
+
+  const handleAddDeck = (e) => {
+    addDeck(e.nativeEvent.text);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -18,14 +25,13 @@ const RegisterDeck = ({navigation}) => {
         style={styles.searchCards}
         placeholder={'Qual o nome do seu deck?'}
         placeholderTextColor="#fff"
-        underlineColorAndroid="transparent"
-        onChangeText={(text) => setDeckname(text)}
-        value={deckname}
+        maxLength={20}
+        onBlur={handleAddDeck}
       />
       <TouchableOpacity
         style={styles.btnArrow}
         onPress={() => {
-          navigation.navigate('SelectCard');
+          navigation.navigate('Main');
         }}>
         <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>

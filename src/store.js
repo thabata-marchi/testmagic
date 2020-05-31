@@ -1,28 +1,26 @@
 import React, {useReducer} from 'react';
 
-const initialState = {
-  deckname: '',
-  cards: [],
-};
+const initialState = {decks: {}};
 
 const store = React.createContext(initialState);
 const {Provider} = store;
 
-// Set_(...) - nome do comando
-// Nome do comando a ser executado pelo reducer
 const actions = {
-  SET_DECKNAME: 'SET_DECKNAME',
+  ADD_DECK: 'ADD_DECK',
   SET_CARDS: 'SET_CARDS',
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case actions.SET_DECKNAME:
-      return {...state, deckname: action.value};
+    case actions.ADD_DECK:
+      console.warn('ADD_DECK:', action);
+
+      return {...state, decks: {...state.decks, [action.name]: []}};
     case action.SET_CARDS:
-      return {...state, cards: action.value};
+      const name = action.name;
+      return {...state, decks: {[name]: action.cards}};
     default:
-      state;
+      return state;
   }
 };
 
@@ -32,11 +30,13 @@ const StateProvider = ({children}) => {
   const valueData = {
     deckname: state.deckname,
     cards: state.cards,
-    setDeckname: (value) => {
-      dispatch({type: actions.SET_DECKNAME, value});
+    decks: state.decks,
+    addDeck: (name) => {
+      console.warn('ADDDECK - name', name);
+      dispatch({type: actions.ADD_DECK, name});
     },
-    setCards: (value) => {
-      dispatch({type: actions.SET_PRICE, value});
+    setCards: (name, cards) => {
+      dispatch({type: actions.SET_CARDS, name, cards});
     },
   };
 

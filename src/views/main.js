@@ -1,54 +1,53 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect} from 'react';
-import {StyleSheet, SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import React, {useContext} from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  View,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
 import {store} from '../store';
-
-// Como salvar mais de um valor dentro do Store ???
-// Como fazer um LOOP para adicionar várias cartas ???
 
 const Main = ({navigation}) => {
   const globalState = useContext(store);
-  const {deckname, cards} = globalState;
+  const {decks} = globalState;
 
-  const setData = async () => {
-    try {
-      const jsonValue = JSON.stringify(globalState);
-      await AsyncStorage.setItem('decks', jsonValue);
-    } catch (e) {
-      console.warn(e);
-    }
+  console.warn('decks', decks);
+
+  const goToRegisterDeck = () => {
+    navigation.navigate('RegisterDeck');
   };
 
-  const saveData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('decks');
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      console.warn(e);
-    }
-  };
+  //Object.keys(decks).map(deck => <Text>{deck}</Text>)
 
-  useEffect(() => {
-    setData();
-    saveData();
-  }, []);
-
-  console.warn('globalState', globalState);
+  // const renderItem = ({item}) => {
+  //   console.warn('RenderItem', item);
+  //   return (
+  //     <View>
+  //       <TouchableOpacity>
+  //         <Text style={styles.h1}>{item}</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        {deckname && cards !== null ? (
-          <TouchableOpacity onPress={() => navigation.navigate('ListDeck')}>
-            <Text style={styles.h1}>{deckname}</Text>
-          </TouchableOpacity>
-        ) : null}
+        {/* <FlatList
+          data={decks}
+          keyExtractor={(item) => item}
+          renderItem={renderItem}
+        /> */}
+
+        {Object.keys(decks).map((deck) => (
+          <Text style={styles.h1}>{deck}</Text>
+        ))}
+
         <Text style={styles.h1}>Meus Decks</Text>
-        <TouchableOpacity
-          style={styles.btnPlay}
-          onPress={() => navigation.navigate('RegisterDeck')}>
+        <TouchableOpacity style={styles.btnPlay} onPress={goToRegisterDeck}>
           <Icon name="add" style={styles.play} />
         </TouchableOpacity>
       </SafeAreaView>
