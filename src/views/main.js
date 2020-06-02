@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   boxDecks: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   textDecks: {
     color: '#fff',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     padding: 10,
-    margin: 20,
+    margin: 5,
   },
   textDeckLink: {
     color: '#fff',
