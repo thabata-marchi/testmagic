@@ -4,12 +4,14 @@ import {store} from '../store';
 
 const Deck = ({navigation}) => {
   const globalState = useContext(store);
-  const {deckname, cards} = globalState;
+  const {decks} = globalState;
+  console.log('DECKS FINAL, decks:', decks);
+  console.warn('globalState:', globalState);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.textDeck}>Deck {deckname} criado com sucesso!</Text>
-      <Text style={styles.textDeck}>{cards}</Text>
+      <Text style={styles.textDeck}>Deck TESTE criado com sucesso!</Text>
+      <Text style={styles.textDeck}>TESTE2</Text>
       <TouchableOpacity
         style={styles.btnPlay}
         onPress={() => {

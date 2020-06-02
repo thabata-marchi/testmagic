@@ -13,19 +13,27 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../../src/services/useDataApi';
 import {store} from '../store';
 
-const SelectCard = ({navigation}) => {
+const SelectCard = ({navigation, route}) => {
+  const {deckname} = route.params;
+  console.warn('SELECTCARDS', deckname);
+
   const globalState = useContext(store);
-  const {cards, setCards} = globalState;
+  const {addDeck} = globalState;
 
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
+  const [cardSelect, setCardSelect] = useState([]);
 
-  // O Cards serve para mostrar em lista todas as cartas
+  // O Cards serve para mostrar em lista todas as caxrtas
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const saveSelect = (item) => {
-    const card = item.name;
-    setCards([card, ...cards]);
+    setCardSelect([item, ...cardSelect]);
+  };
+
+  const goToDeck = () => {
+    addDeck(deckname, cardSelect);
+    navigation.navigate('Deck');
   };
 
   const searchCards = (value) => {
@@ -75,20 +83,21 @@ const SelectCard = ({navigation}) => {
           renderItem={renderItem}
         />
       ) : null}
-      {cards.length > 0 ? (
+
+      {/* {cards.length > 0 ? (
         <View style={styles.cardsed}>
           <Text style={styles.textCardsH1}>
             Você selecionou as seguintes cartas:
           </Text>
-          <Text style={styles.textCards}>{cards}</Text>
-          <TouchableOpacity
-            style={styles.btnStartGo}
-            onPress={() => navigation.navigate('Deck')}>
-            <Text style={styles.textStartGo}>Continue</Text>
-            <Icon name="chevron-right" style={styles.startGo} />
-          </TouchableOpacity>
+          <Text style={styles.textCards}>CartAS AQUI ADICIONADAS</Text>
+
         </View>
-      ) : null}
+      ) : null} */}
+
+      <TouchableOpacity style={styles.btnStartGo} onPress={goToDeck}>
+        <Text style={styles.textStartGo}>Continue</Text>
+        <Icon name="chevron-right" style={styles.startGo} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

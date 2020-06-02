@@ -5,20 +5,13 @@ const initialState = {decks: {}};
 const store = React.createContext(initialState);
 const {Provider} = store;
 
-const actions = {
-  ADD_DECK: 'ADD_DECK',
-  SET_CARDS: 'SET_CARDS',
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
-    case actions.ADD_DECK:
-      console.warn('ADD_DECK:', action);
-
-      return {...state, decks: {...state.decks, [action.name]: []}};
-    case action.SET_CARDS:
-      const name = action.name;
-      return {...state, decks: {[name]: action.cards}};
+    case 'ADD_DECK':
+      return {
+        ...state,
+        decks: {...state.decks, [action.name]: [action.cards]},
+      };
     default:
       return state;
   }
@@ -26,17 +19,17 @@ const reducer = (state, action) => {
 
 const StateProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log('STATE', state);
 
   const valueData = {
-    deckname: state.deckname,
-    cards: state.cards,
     decks: state.decks,
-    addDeck: (name) => {
-      console.warn('ADDDECK - name', name);
-      dispatch({type: actions.ADD_DECK, name});
-    },
-    setCards: (name, cards) => {
-      dispatch({type: actions.SET_CARDS, name, cards});
+    name: state.name,
+    cards: state.cards,
+
+    addDeck: (name, cards) => {
+      console.warn('REDUCER - name:', name);
+      console.warn('REDUCER - cards:', cards);
+      dispatch({type: 'ADD_DECK', name, cards});
     },
   };
 

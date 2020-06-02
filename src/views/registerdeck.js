@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -6,18 +6,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {store} from '../store';
 
 const RegisterDeck = ({navigation}) => {
-  const globalState = useContext(store);
-  const {addDeck} = globalState;
-
-  console.warn('globalState', globalState);
-  console.warn('addDeck', addDeck);
+  const [nameDeck, setNameDeck] = useState('');
 
   const handleAddDeck = (e) => {
-    addDeck(e.nativeEvent.text);
+    setNameDeck(e);
   };
+
+  const goSelectCard = () => {
+    console.warn('decknameREGsISTER', nameDeck);
+    navigation.navigate('SelectCard', {deckname: nameDeck});
+  };
+
+  console.warn('decknameREGISTER', nameDeck);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,13 +28,9 @@ const RegisterDeck = ({navigation}) => {
         placeholder={'Qual o nome do seu deck?'}
         placeholderTextColor="#fff"
         maxLength={20}
-        onBlur={handleAddDeck}
+        onChangeText={handleAddDeck}
       />
-      <TouchableOpacity
-        style={styles.btnArrow}
-        onPress={() => {
-          navigation.navigate('Main');
-        }}>
+      <TouchableOpacity style={styles.btnArrow} onPress={goSelectCard}>
         <Icon name="chevron-right" style={styles.arrow} />
       </TouchableOpacity>
     </SafeAreaView>

@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   Text,
   TouchableOpacity,
-  FlatList,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,13 +13,11 @@ const Main = ({navigation}) => {
   const globalState = useContext(store);
   const {decks} = globalState;
 
-  console.warn('decks', decks);
+  console.log('Main - decks', decks);
 
   const goToRegisterDeck = () => {
     navigation.navigate('RegisterDeck');
   };
-
-  //Object.keys(decks).map(deck => <Text>{deck}</Text>)
 
   // const renderItem = ({item}) => {
   //   console.warn('RenderItem', item);
@@ -42,8 +39,11 @@ const Main = ({navigation}) => {
           renderItem={renderItem}
         /> */}
 
-        {Object.keys(decks).map((deck) => (
-          <Text style={styles.h1}>{deck}</Text>
+        {Object.keys(decks).map((deck, index) => (
+          <View key={index}>
+            <Text style={styles.h1}>{deck}</Text>
+            <Text style={styles.h1}>{deck.cards}</Text>
+          </View>
         ))}
 
         <Text style={styles.h1}>Meus Decks</Text>
