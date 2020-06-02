@@ -53,7 +53,7 @@ const Routes = () => {
           name="Deck"
           component={Deck}
           options={{
-            title: 'List Cards',
+            title: 'Deck Created',
             headerStyle: {
               backgroundColor: '#1d1c25',
             },

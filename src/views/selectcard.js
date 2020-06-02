@@ -15,7 +15,6 @@ import {store} from '../store';
 
 const SelectCard = ({navigation, route}) => {
   const {deckname} = route.params;
-  console.warn('SELECTCARDS', deckname);
 
   const globalState = useContext(store);
   const {addDeck} = globalState;
@@ -23,8 +22,9 @@ const SelectCard = ({navigation, route}) => {
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
   const [cardSelect, setCardSelect] = useState([]);
+  const [clicked, setClicked] = useState(false);
 
-  // O Cards serve para mostrar em lista todas as caxrtas
+  // O Cards serve para mostrar em lista todas as cartas
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const saveSelect = (item) => {
@@ -33,14 +33,10 @@ const SelectCard = ({navigation, route}) => {
 
   const goToDeck = () => {
     addDeck(deckname, cardSelect);
-    navigation.navigate('Deck');
+    navigation.navigate('Deck', {cardsdeck: cardSelect, deckname: deckname});
   };
 
-  const searchCards = (value) => {
-    if (value === '') {
-      //alert('Busque suas cartas!');
-      return;
-    }
+  const searchCards = () => {
     const cardsFilter = data.filter(({name}) => name.includes(textInput));
     textInput.length > 0 ? setCardsAdd(cardsFilter) : null;
   };
@@ -62,42 +58,44 @@ const SelectCard = ({navigation, route}) => {
     </View>
   );
 
+  const goSearch = () => {
+    setClicked(true);
+    searchCards(textInput);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchCards}
-        placeholder={'Escolha as cartas'}
-        placeholderTextColor="#fff"
-        onChangeText={(text) => setTextInput(text)}
-      />
-      <TouchableOpacity
-        style={styles.btnArrow}
-        onPress={() => searchCards(textInput)}>
-        <Icon name="search" style={styles.arrow} />
-      </TouchableOpacity>
-      {textInput.length > 0 ? (
-        <FlatList
-          data={cardsAdd}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          renderItem={renderItem}
+      <View style={styles.search}>
+        <TextInput
+          style={styles.searchCards}
+          placeholder={'Escolha as cartas'}
+          placeholderTextColor="#fff"
+          onChangeText={(text) => setTextInput(text)}
         />
+        <TouchableOpacity style={styles.btnArrow} onPress={goSearch}>
+          <Icon name="search" style={styles.arrow} />
+        </TouchableOpacity>
+      </View>
+
+      {clicked !== false ? (
+        <View style={styles.cardsBox}>
+          <FlatList
+            data={cardsAdd}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            renderItem={renderItem}
+          />
+        </View>
       ) : null}
 
-      {/* {cards.length > 0 ? (
-        <View style={styles.cardsed}>
-          <Text style={styles.textCardsH1}>
-            Você selecionou as seguintes cartas:
-          </Text>
-          <Text style={styles.textCards}>CartAS AQUI ADICIONADAS</Text>
-
+      {cardSelect.length > 0 ? (
+        <View style={styles.cardSelected}>
+          <TouchableOpacity style={styles.btnStartGo} onPress={goToDeck}>
+            <Text style={styles.textStartGo}>Continue</Text>
+            <Icon name="chevron-right" style={styles.startGo} />
+          </TouchableOpacity>
         </View>
-      ) : null} */}
-
-      <TouchableOpacity style={styles.btnStartGo} onPress={goToDeck}>
-        <Text style={styles.textStartGo}>Continue</Text>
-        <Icon name="chevron-right" style={styles.startGo} />
-      </TouchableOpacity>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -114,13 +112,23 @@ const styles = StyleSheet.create({
     margin: 30,
     color: '#FFF',
   },
+  search: {
+    flexDirection: 'row',
+  },
+  cardsBox: {
+    height: 530,
+    padding: 5,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
   searchCards: {
     borderWidth: 2,
     borderColor: '#5e4f67',
     padding: 20,
     marginTop: 40,
     marginBottom: 20,
-    borderRadius: 8,
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
     backgroundColor: '#242031',
     color: '#D7D7D7',
     fontSize: 20,
@@ -131,16 +139,18 @@ const styles = StyleSheet.create({
   },
   btnArrow: {
     backgroundColor: '#5e4f67',
-    borderRadius: 50,
-    width: 60,
-    height: 60,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    width: 68,
+    height: 68,
+    marginTop: 40,
     marginBottom: 10,
   },
   arrow: {
     color: '#fff',
     paddingLeft: 15,
     paddingTop: 16,
-    fontSize: 32,
+    fontSize: 38,
   },
   btnStartGo: {
     justifyContent: 'flex-end',
@@ -173,11 +183,17 @@ const styles = StyleSheet.create({
     height: 220,
   },
   cardSelected: {
-    margin: 30,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   textCardsH1: {
     fontSize: 19,
     marginBottom: 10,
+    color: '#FFF',
+    fontWeight: '500',
+  },
+  listCardsSelected: {
+    fontSize: 14,
     color: '#FFF',
     fontWeight: '500',
   },

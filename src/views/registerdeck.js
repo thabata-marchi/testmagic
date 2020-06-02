@@ -15,11 +15,8 @@ const RegisterDeck = ({navigation}) => {
   };
 
   const goSelectCard = () => {
-    console.warn('decknameREGsISTER', nameDeck);
     navigation.navigate('SelectCard', {deckname: nameDeck});
   };
-
-  console.warn('decknameREGISTER', nameDeck);
 
   return (
     <SafeAreaView style={styles.container}>

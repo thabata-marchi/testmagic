@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 
-const initialState = {decks: {}};
+const initialState = {decks: []};
 
 const store = React.createContext(initialState);
 const {Provider} = store;
@@ -10,8 +10,9 @@ const reducer = (state, action) => {
     case 'ADD_DECK':
       return {
         ...state,
-        decks: {...state.decks, [action.name]: [action.cards]},
+        decks: [...state.decks, {deckname: action.name, cards: action.cards}],
       };
+
     default:
       return state;
   }
@@ -19,7 +20,6 @@ const reducer = (state, action) => {
 
 const StateProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log('STATE', state);
 
   const valueData = {
     decks: state.decks,
@@ -27,8 +27,6 @@ const StateProvider = ({children}) => {
     cards: state.cards,
 
     addDeck: (name, cards) => {
-      console.warn('REDUCER - name:', name);
-      console.warn('REDUCER - cards:', cards);
       dispatch({type: 'ADD_DECK', name, cards});
     },
   };
