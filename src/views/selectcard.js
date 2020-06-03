@@ -28,7 +28,16 @@ const SelectCard = ({navigation, route}) => {
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const saveSelect = (item) => {
-    setCardSelect([item, ...cardSelect]);
+    cardSelect.indexOf(item) >= 0
+      ? console.warn('Este item já foi adicionado!')
+      : setCardSelect([item, ...cardSelect]);
+  };
+
+  // Remove as cartas selecionadas
+  const removeSelect = (item) => {
+    cardSelect.indexOf(item) >= 0
+      ? cardSelect.splice(cardSelect.indexOf(item), 1)
+      : console.warn('Item não existe no Array osu já foi removido!');
   };
 
   const goToDeck = () => {
@@ -49,12 +58,19 @@ const SelectCard = ({navigation, route}) => {
         }}>
         <Image style={styles.imgCard} source={{uri: item.image_uris.normal}} />
       </TouchableOpacity>
+      <View style={styles.boxAddRemove}>
+        <TouchableOpacity
+          style={styles.buttonAdd}
+          onPress={() => saveSelect(item)}>
+          <Text style={styles.textAdd}>adicionar</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.buttonAdd}
-        onPress={() => saveSelect(item)}>
-        <Text style={styles.textAdd}>adicionar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonAdd}
+          onPress={() => removeSelect(item)}>
+          <Text style={styles.textAdd}>remover</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -164,17 +180,28 @@ const styles = StyleSheet.create({
   buttonAdd: {
     alignItems: 'center',
     marginTop: 5,
+    backgroundColor: '#5e4f67',
+    margin: 2,
+    borderRadius: 5,
   },
+  textAdd: {
+    fontSize: 16,
+    padding: 5,
+    color: '#FFFFFF',
+  },
+  boxAddRemove: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
   textStartGo: {
     color: '#FFFFFF',
     fontSize: 18,
     lineHeight: 33,
   },
-  textAdd: {
-    fontSize: 18,
-    padding: 5,
-    color: '#FFFFFF',
-  },
+
   cards: {
     margin: 10,
   },
