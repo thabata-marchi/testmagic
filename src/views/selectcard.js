@@ -8,6 +8,7 @@ import {
   Image,
   Text,
   FlatList,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../../src/services/useDataApi';
@@ -40,14 +41,36 @@ const SelectCard = ({navigation, route}) => {
       : console.warn('Item não existe no Array osu já foi removido!');
   };
 
-  const goToDeck = () => {
-    addDeck(deckname, cardSelect);
-    navigation.navigate('Deck', {cardsdeck: cardSelect, deckname: deckname});
-  };
+  // Seu DECK. Confirma a criação do DECK nomeDeck?
+  // Modal. Sim, voltar para Home.
+  // Não, fazer ajustes.
 
   const searchCards = () => {
     const cardsFilter = data.filter(({name}) => name.includes(textInput));
     textInput.length > 0 ? setCardsAdd(cardsFilter) : null;
+  };
+
+  const goSearch = () => {
+    setClicked(true);
+    searchCards(textInput);
+  };
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const entrar = () => {
+    setModalVisible(true);
+  };
+
+  const sair = () => {
+    setModalVisible(false);
+  };
+
+  const goToHome = () => {
+    addDeck(deckname, cardSelect);
+    navigation.navigate('Main', {cardsdeck: cardSelect, deckname: deckname});
+  };
+
+  const goToHomeNoSave = () => {
+    navigation.navigate('Main');
   };
 
   const renderItem = ({item, index}) => (
@@ -73,11 +96,6 @@ const SelectCard = ({navigation, route}) => {
       </View>
     </View>
   );
-
-  const goSearch = () => {
-    setClicked(true);
-    searchCards(textInput);
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,12 +123,73 @@ const SelectCard = ({navigation, route}) => {
       ) : null}
 
       {cardSelect.length > 0 ? (
-        <View style={styles.cardSelected}>
-          <TouchableOpacity style={styles.btnStartGo} onPress={goToDeck}>
-            <Text style={styles.textStartGo}>Continue</Text>
-            <Icon name="chevron-right" style={styles.startGo} />
-          </TouchableOpacity>
-        </View>
+        <>
+          <View style={styles.cardSelected}>
+            <TouchableOpacity style={styles.btnStartGo} onPress={entrar}>
+              <Text style={styles.btnTextStartGo}>Continue</Text>
+              <Icon name="chevron-right" style={styles.startGo} />
+            </TouchableOpacity>
+          </View>
+
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={modalVisible}>
+            <View style={styles.modalCentered}>
+              <View style={styles.modal}>
+                <TouchableOpacity
+                  style={styles.close}
+                  title="Sair"
+                  onPress={sair}>
+                  <Icon name="close" style={styles.play} />
+                </TouchableOpacity>
+                <Text style={styles.textStartGo}>
+                  Confirma a criação do DECK de {deckname}?
+                </Text>
+                <View style={styles.cardMessage}>
+                  <TouchableOpacity
+                    style={styles.btnStartGo}
+                    onPress={goToHome}>
+                    <Text style={styles.btnTextStartGo}>SIM</Text>
+                    <Icon name="done" style={styles.startGo} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.btnStartGo}
+                    onPress={goToHomeNoSave}>
+                    <Text style={styles.btnTextStartGo}>NÃO</Text>
+                    <Icon name="home" style={styles.startGo} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.btnStartGo} onPress={sair}>
+                    <Text style={styles.btnTextStartGo}>ALTERAR</Text>
+                    <Icon name="edit" style={styles.startGo} />
+                  </TouchableOpacity>
+                </View>
+
+                <FlatList
+                  data={cardSelect}
+                  keyExtractor={(item) => item.id}
+                  numColumns={2}
+                  renderItem={({item}) => (
+                    <View style={styles.cards}>
+                      <TouchableOpacity
+                        key={item.id}
+                        onPress={() => {
+                          navigation.navigate('InfoCard', {
+                            cardmagic: item,
+                          });
+                        }}>
+                        <Image
+                          style={styles.imgCard}
+                          source={{uri: item.image_uris.normal}}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                />
+              </View>
+            </View>
+          </Modal>
+        </>
       ) : null}
     </SafeAreaView>
   );
@@ -168,14 +247,27 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     fontSize: 38,
   },
+
+  cardMessage: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnStartGo: {
+    backgroundColor: '#5e4f67',
     justifyContent: 'flex-end',
     flexDirection: 'row',
     alignItems: 'flex-end',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
+    margin: 5,
   },
   startGo: {
     color: '#fff',
     fontSize: 32,
+    marginRight: 5,
+    lineHeight: 38,
   },
 
   boxAddRemove: {
@@ -200,8 +292,17 @@ const styles = StyleSheet.create({
 
   textStartGo: {
     color: '#FFFFFF',
+    fontSize: 25,
+    lineHeight: 33,
+    textAlign: 'center',
+    margin: 10,
+  },
+
+  btnTextStartGo: {
+    color: '#FFFFFF',
     fontSize: 18,
     lineHeight: 33,
+    textAlign: 'center',
   },
 
   cards: {
@@ -215,6 +316,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+
   textCardsH1: {
     fontSize: 19,
     marginBottom: 10,
@@ -229,6 +331,51 @@ const styles = StyleSheet.create({
   textCards: {
     color: '#FFF',
     fontSize: 15,
+  },
+
+  modalCentered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 110,
+    paddingBottom: 30,
+  },
+
+  modal: {
+    flex: 1,
+    backgroundColor: '#392a42',
+    borderRadius: 20,
+    padding: 5,
+    paddingLeft: 30,
+    paddingRight: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+
+  close: {
+    fontSize: 20,
+    alignItems: 'flex-end',
+    marginRight: -20,
+    marginTop: -10,
+  },
+
+  textModal: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontSize: 30,
+    marginBottom: 5,
+  },
+  play: {
+    color: '#fff',
+    paddingLeft: 14,
+    paddingTop: 14,
+    fontSize: 32,
   },
 });
 

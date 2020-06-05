@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 
   modal: {
     flex: 1,
-    backgroundColor: '#5e4f67',
+    backgroundColor: '#392a42',
     borderRadius: 20,
     padding: 5,
     shadowColor: '#000',
