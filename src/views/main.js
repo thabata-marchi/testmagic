@@ -20,6 +20,7 @@ const Main = ({navigation}) => {
 
   const [isDeck, setIsDeck] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [deckRemove, setDeckRemove] = useState(false);
   const [deckVisible, setDeckVisible] = useState([]);
 
   useEffect(() => {
@@ -33,13 +34,22 @@ const Main = ({navigation}) => {
   };
 
   const entrar = (item) => {
-    console.warn(item.deckname);
     setModalVisible(true);
     setDeckVisible(item);
   };
 
   const sair = () => {
     setModalVisible(false);
+    setDeckRemove(false);
+  };
+
+  console.log('decks', decks);
+
+  const removeDeck = () => {
+    console.log('deckVisible', deckVisible);
+    console.log('deckVisible', decks.indexOf(deckVisible));
+    decks.splice(decks.indexOf(deckVisible), 1);
+    setDeckRemove(true);
   };
 
   const renderItem = ({item}) => {
@@ -79,6 +89,7 @@ const Main = ({navigation}) => {
             </>
           ) : null}
         </View>
+
         <Modal transparent={true} animationType="slide" visible={modalVisible}>
           <View style={styles.modalCentered}>
             <View style={styles.modal}>
@@ -88,36 +99,53 @@ const Main = ({navigation}) => {
                 onPress={sair}>
                 <Icon name="close" style={styles.play} />
               </TouchableOpacity>
-
-              <Text style={styles.textModal}>
-                Deck de {deckVisible.deckname}
-              </Text>
-              <View style={styles.cardSelected}>
-                {decks.length > 0 &&
-                modalVisible &&
-                deckVisible.cards.length > 0 ? (
-                  <FlatList
-                    data={deckVisible.cards}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    renderItem={({item, index}) => (
-                      <View style={styles.cards} key={index}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            navigation.navigate('InfoCard', {cardmagic: item});
-                          }}>
-                          <Image
-                            style={styles.imgCard}
-                            source={{uri: item.image_uris.normal}}
-                          />
-                        </TouchableOpacity>
-                      </View>
+              {!deckRemove ? (
+                <>
+                  <Text style={styles.textModal}>
+                    Deck de {deckVisible.deckname}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.btnRemove}
+                    onPress={() => removeDeck()}>
+                    <Text style={styles.textRemove}>Remover Deck</Text>
+                  </TouchableOpacity>
+                  <View style={styles.cardSelected}>
+                    {decks.length > 0 &&
+                    modalVisible &&
+                    deckVisible.cards.length > 0 ? (
+                      <FlatList
+                        data={deckVisible.cards}
+                        keyExtractor={(item) => item.id}
+                        numColumns={2}
+                        renderItem={({item}) => (
+                          <View style={styles.cards}>
+                            <TouchableOpacity
+                              key={item.id}
+                              onPress={() => {
+                                navigation.navigate('InfoCard', {
+                                  cardmagic: item,
+                                });
+                              }}>
+                              <Image
+                                style={styles.imgCard}
+                                source={{uri: item.image_uris.normal}}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                      />
+                    ) : (
+                      <Text>Este Deck não possui cartas</Text>
                     )}
-                  />
-                ) : (
-                  <Text>Este Deck não possui cartas</Text>
-                )}
-              </View>
+                  </View>
+                </>
+              ) : (
+                <View style={styles.messageRemove}>
+                  <Text style={styles.textDeck}>
+                    Deck removido com sucesso!
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         </Modal>
@@ -224,7 +252,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textAlign: 'center',
     fontSize: 30,
-    marginBottom: 30,
+    marginBottom: 5,
   },
 
   cardSelected: {
@@ -236,5 +264,30 @@ const styles = StyleSheet.create({
     width: 160,
     height: 220,
     margin: 10,
+  },
+
+  btnRemove: {
+    alignItems: 'center',
+    marginTop: 5,
+    backgroundColor: '#000',
+    margin: 12,
+    borderRadius: 5,
+  },
+
+  textRemove: {
+    fontSize: 20,
+    padding: 5,
+    color: '#FFFFFF',
+  },
+
+  messageRemove: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 25,
+  },
+  textDeck: {
+    fontSize: 25,
+    color: '#FFFFFF',
   },
 });
