@@ -8,11 +8,12 @@ import {
   FlatList,
   Image,
   ScrollView,
+  Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../store';
 
-const ListDeck = ({navigation, route}) => {
+const ModalDeck = ({navigation, route}) => {
   const globalState = useContext(store);
   const {decks} = globalState;
   const {mydeck} = route.params;
@@ -45,56 +46,60 @@ const ListDeck = ({navigation, route}) => {
   };
 
   console.log(decks.indexOf(mydeck));
-  console.log('LISTDECK, decks:', decks);
+  console.log('ModalDeck, decks:', decks);
   console.log('mydeck', mydeck);
   //addDeck(decks);
   // COMO ATUALIZAR !!!
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        {!deckRemove ? (
-          <>
-            <TouchableOpacity style={styles.btnPlay} onPress={selectRemoveDeck}>
-              <Icon name="remove" style={styles.play} />
-            </TouchableOpacity>
+    <Modal transparent={true} animationType="slide">
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          {!deckRemove ? (
+            <>
+              <TouchableOpacity
+                style={styles.btnPlay}
+                onPress={selectRemoveDeck}>
+                <Icon name="remove" style={styles.play} />
+              </TouchableOpacity>
 
-            <Text style={styles.textDeck}>Deck de {mydeck.deckname}</Text>
-            <View style={styles.boxAddRemove}>
-              <TouchableOpacity
-                style={styles.buttonAdd}
-                onPress={() => addCards()}>
-                <Text style={styles.textAdd}>Adicionar Cartas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonAdd}
-                onPress={() => removeCards()}>
-                <Text style={styles.textAdd}>Remover Cartas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonAdd}
-                onPress={() => removeDeck()}>
-                <Text style={styles.textAdd}>Remover Deck</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.cardSelected}>
-              {mydeck.cards.length > 0 ? (
-                <FlatList
-                  data={mydeck.cards}
-                  keyExtractor={(item) => item.id}
-                  numColumns={2}
-                  renderItem={renderItem}
-                />
-              ) : (
-                <Text>Este Deck não possui cartas</Text>
-              )}
-            </View>
-          </>
-        ) : (
-          <Text style={styles.textDeck}>Deck removido com sucesso!</Text>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+              <Text style={styles.textDeck}>Deck de {mydeck.deckname}</Text>
+              <View style={styles.boxAddRemove}>
+                <TouchableOpacity
+                  style={styles.buttonAdd}
+                  onPress={() => addCards()}>
+                  <Text style={styles.textAdd}>Adicionar Cartas</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonAdd}
+                  onPress={() => removeCards()}>
+                  <Text style={styles.textAdd}>Remover Cartas</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonAdd}
+                  onPress={() => removeDeck()}>
+                  <Text style={styles.textAdd}>Remover Deck</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.cardSelected}>
+                {mydeck.cards.length > 0 ? (
+                  <FlatList
+                    data={mydeck.cards}
+                    keyExtractor={(item) => item.id}
+                    numColumns={2}
+                    renderItem={renderItem}
+                  />
+                ) : (
+                  <Text>Este Deck não possui cartas</Text>
+                )}
+              </View>
+            </>
+          ) : (
+            <Text style={styles.textDeck}>Deck removido com sucesso!</Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </Modal>
   );
 };
 
@@ -178,4 +183,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListDeck;
+export default ModalDeck;

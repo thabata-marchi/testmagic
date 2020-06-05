@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     textAlign: 'center',
   },
+
   cardSelected: {
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -79,14 +80,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
   },
+
   textAdd: {
     fontSize: 18,
     padding: 5,
     color: '#FFFFFF',
   },
+
   cards: {
     margin: 10,
   },
+
   imgCard: {
     width: 160,
     height: 220,

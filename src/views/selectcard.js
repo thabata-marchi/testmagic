@@ -177,6 +177,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 32,
   },
+
+  boxAddRemove: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
   buttonAdd: {
     alignItems: 'center',
     marginTop: 5,
@@ -188,12 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 5,
     color: '#FFFFFF',
-  },
-  boxAddRemove: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 
   textStartGo: {
