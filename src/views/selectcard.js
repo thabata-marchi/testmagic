@@ -1,49 +1,32 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   View,
-  Image,
   Text,
-  FlatList,
-  Modal,
 } from 'react-native';
 import SearchCards from '../components/SearchCards';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import ModalCreateDeck from '../components/ModalCreateDeck';
 
-import {store} from '../store';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const SelectCard = ({navigation, route}) => {
   const {deckname} = route.params;
-
   const [cardSelect, setCardSelect] = useState([]);
-
-  const globalState = useContext(store);
-  const {addDeck} = globalState;
   const [modalVisible, setModalVisible] = useState(false);
 
   const entrar = () => {
     setModalVisible(true);
   };
 
-  const sair = () => {
-    setModalVisible(false);
-  };
-
-  const goToHome = () => {
-    addDeck(deckname, cardSelect);
-    navigation.navigate('Main', {cardsdeck: cardSelect, deckname: deckname});
-  };
-
-  const goToHomeNoSave = () => {
-    navigation.navigate('Main');
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <SearchCards cardSelect={cardSelect} setCardSelect={setCardSelect} />
+      <SearchCards
+        cardSelect={cardSelect}
+        setCardSelect={setCardSelect}
+        navigation={navigation}
+      />
 
       {cardSelect.length > 0 ? (
         <>
@@ -54,64 +37,13 @@ const SelectCard = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
 
-          <Modal
-            transparent={true}
-            animationType="slide"
-            visible={modalVisible}>
-            <View style={styles.modalCentered}>
-              <View style={styles.modal}>
-                <TouchableOpacity
-                  style={styles.close}
-                  title="Sair"
-                  onPress={sair}>
-                  <Icon name="close" style={styles.play} />
-                </TouchableOpacity>
-                <Text style={styles.textStartGo}>
-                  Confirma a criação do DECK de {deckname}?
-                </Text>
-                <View style={styles.cardMessage}>
-                  <TouchableOpacity
-                    style={styles.btnStartGo}
-                    onPress={goToHome}>
-                    <Text style={styles.btnTextStartGo}>SIM</Text>
-                    <Icon name="done" style={styles.startGo} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.btnStartGo}
-                    onPress={goToHomeNoSave}>
-                    <Text style={styles.btnTextStartGo}>NÃO</Text>
-                    <Icon name="home" style={styles.startGo} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btnStartGo} onPress={sair}>
-                    <Text style={styles.btnTextStartGo}>ALTERAR</Text>
-                    <Icon name="edit" style={styles.startGo} />
-                  </TouchableOpacity>
-                </View>
-
-                <FlatList
-                  data={cardSelect}
-                  keyExtractor={(item) => item.id}
-                  numColumns={2}
-                  renderItem={({item}) => (
-                    <View style={styles.cards}>
-                      <TouchableOpacity
-                        key={item.id}
-                        onPress={() => {
-                          navigation.navigate('InfoCard', {
-                            cardmagic: item,
-                          });
-                        }}>
-                        <Image
-                          style={styles.imgCard}
-                          source={{uri: item.image_uris.normal}}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                />
-              </View>
-            </View>
-          </Modal>
+          <ModalCreateDeck
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            deckname={deckname}
+            cardSelect={cardSelect}
+            navigation={navigation}
+          />
         </>
       ) : null}
     </SafeAreaView>

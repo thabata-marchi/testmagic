@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -14,10 +14,7 @@ import useDataApi from '../hooks/useDataApi';
 const SearchCards = ({navigation, cardSelect, setCardSelect}) => {
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
-
   const [clicked, setClicked] = useState(false);
-
-  // O Cards serve para mostrar em lista todas as cartas
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const saveSelect = (item) => {
@@ -26,7 +23,6 @@ const SearchCards = ({navigation, cardSelect, setCardSelect}) => {
       : setCardSelect([item, ...cardSelect]);
   };
 
-  // Remove as cartas selecionadas
   const removeSelect = (item) => {
     cardSelect.indexOf(item) >= 0
       ? cardSelect.splice(cardSelect.indexOf(item), 1)
