@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   View,
@@ -12,11 +11,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../hooks/useDataApi';
 
-const SelectCard = () => {
+const SearchCards = ({navigation, cardSelect, setCardSelect}) => {
   const data = useDataApi();
-
   const [textInput, setTextInput] = useState('');
-  const [cardSelect, setCardSelect] = useState([]);
+
   const [clicked, setClicked] = useState(false);
 
   // O Cards serve para mostrar em lista todas as cartas
@@ -47,16 +45,19 @@ const SelectCard = () => {
 
   const renderItem = ({item, index}) => (
     <View style={styles.cards} key={index}>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('InfoCard', {cardmagic: item});
+        }}>
         <Image style={styles.imgCard} source={{uri: item.image_uris.normal}} />
       </TouchableOpacity>
-
       <View style={styles.boxAddRemove}>
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={() => saveSelect(item)}>
           <Text style={styles.textAdd}>adicionar</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={() => removeSelect(item)}>
@@ -67,7 +68,7 @@ const SelectCard = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <View style={styles.search}>
         <TextInput
           style={styles.searchCards}
@@ -90,17 +91,11 @@ const SelectCard = () => {
           />
         </View>
       ) : null}
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1d1c25',
-  },
   h1: {
     fontSize: 30,
     margin: 30,
@@ -146,36 +141,18 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     fontSize: 38,
   },
-
-  cardMessage: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnStartGo: {
-    backgroundColor: '#5e4f67',
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 10,
-    margin: 5,
-  },
   startGo: {
     color: '#fff',
     fontSize: 32,
     marginRight: 5,
     lineHeight: 38,
   },
-
   boxAddRemove: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-
   buttonAdd: {
     alignItems: 'center',
     marginTop: 5,
@@ -188,7 +165,6 @@ const styles = StyleSheet.create({
     padding: 5,
     color: '#FFFFFF',
   },
-
   textStartGo: {
     color: '#FFFFFF',
     fontSize: 25,
@@ -196,14 +172,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
-
-  btnTextStartGo: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    lineHeight: 33,
-    textAlign: 'center',
-  },
-
   cards: {
     margin: 10,
   },
@@ -211,71 +179,6 @@ const styles = StyleSheet.create({
     width: 160,
     height: 220,
   },
-  cardSelected: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-
-  textCardsH1: {
-    fontSize: 19,
-    marginBottom: 10,
-    color: '#FFF',
-    fontWeight: '500',
-  },
-  listCardsSelected: {
-    fontSize: 14,
-    color: '#FFF',
-    fontWeight: '500',
-  },
-  textCards: {
-    color: '#FFF',
-    fontSize: 15,
-  },
-
-  modalCentered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 110,
-    paddingBottom: 30,
-  },
-
-  modal: {
-    flex: 1,
-    backgroundColor: '#392a42',
-    borderRadius: 20,
-    padding: 5,
-    paddingLeft: 30,
-    paddingRight: 30,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-
-  close: {
-    fontSize: 20,
-    alignItems: 'flex-end',
-    marginRight: -20,
-    marginTop: -10,
-  },
-
-  textModal: {
-    color: '#FFF',
-    textAlign: 'center',
-    fontSize: 30,
-    marginBottom: 5,
-  },
-  play: {
-    color: '#fff',
-    paddingLeft: 14,
-    paddingTop: 14,
-    fontSize: 32,
-  },
 });
 
-export default SelectCard;
+export default SearchCards;

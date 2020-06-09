@@ -10,52 +10,20 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
+import SearchCards from '../components/SearchCards';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import useDataApi from '../hooks/useDataApi';
+
 import {store} from '../store';
 
 const SelectCard = ({navigation, route}) => {
   const {deckname} = route.params;
 
+  const [cardSelect, setCardSelect] = useState([]);
+
   const globalState = useContext(store);
   const {addDeck} = globalState;
-
-  const data = useDataApi();
-  const [textInput, setTextInput] = useState('');
-  const [cardSelect, setCardSelect] = useState([]);
-  const [clicked, setClicked] = useState(false);
-
-  // O Cards serve para mostrar em lista todas as cartas
-  const [cardsAdd, setCardsAdd] = useState([]);
-
-  const saveSelect = (item) => {
-    cardSelect.indexOf(item) >= 0
-      ? console.warn('Este item já foi adicionado!')
-      : setCardSelect([item, ...cardSelect]);
-  };
-
-  // Remove as cartas selecionadas
-  const removeSelect = (item) => {
-    cardSelect.indexOf(item) >= 0
-      ? cardSelect.splice(cardSelect.indexOf(item), 1)
-      : console.warn('Item não existe no Array osu já foi removido!');
-  };
-
-  // Seu DECK. Confirma a criação do DECK nomeDeck?
-  // Modal. Sim, voltar para Home.
-  // Não, fazer ajustes.
-
-  const searchCards = () => {
-    const cardsFilter = data.filter(({name}) => name.includes(textInput));
-    textInput.length > 0 ? setCardsAdd(cardsFilter) : null;
-  };
-
-  const goSearch = () => {
-    setClicked(true);
-    searchCards(textInput);
-  };
-
   const [modalVisible, setModalVisible] = useState(false);
+
   const entrar = () => {
     setModalVisible(true);
   };
@@ -73,54 +41,9 @@ const SelectCard = ({navigation, route}) => {
     navigation.navigate('Main');
   };
 
-  const renderItem = ({item, index}) => (
-    <View style={styles.cards} key={index}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('InfoCard', {cardmagic: item});
-        }}>
-        <Image style={styles.imgCard} source={{uri: item.image_uris.normal}} />
-      </TouchableOpacity>
-      <View style={styles.boxAddRemove}>
-        <TouchableOpacity
-          style={styles.buttonAdd}
-          onPress={() => saveSelect(item)}>
-          <Text style={styles.textAdd}>adicionar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonAdd}
-          onPress={() => removeSelect(item)}>
-          <Text style={styles.textAdd}>remover</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.search}>
-        <TextInput
-          style={styles.searchCards}
-          placeholder={'Escolha as cartas'}
-          placeholderTextColor="#fff"
-          onChangeText={(text) => setTextInput(text)}
-        />
-        <TouchableOpacity style={styles.btnArrow} onPress={goSearch}>
-          <Icon name="search" style={styles.arrow} />
-        </TouchableOpacity>
-      </View>
-
-      {clicked !== false ? (
-        <View style={styles.cardsBox}>
-          <FlatList
-            data={cardsAdd}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            renderItem={renderItem}
-          />
-        </View>
-      ) : null}
+      <SearchCards cardSelect={cardSelect} setCardSelect={setCardSelect} />
 
       {cardSelect.length > 0 ? (
         <>
