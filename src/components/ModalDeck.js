@@ -39,9 +39,10 @@ const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
       : console.warn('Item não existe no Array ou já foi removido!');
   };
 
-  const removeCard = (i) => {
-    itensDecks.cards.indexOf(i) >= 0
-      ? itensDecks.cards.splice(itensDecks.cards.indexOf(i), 1)
+  const removeCard = (item) => {
+    itensDecks.cards.indexOf(item) >= 0
+      ? (itensDecks.cards.splice(itensDecks.cards.indexOf(item), 1),
+        setCardsRemove(false))
       : console.warn('Item não existe no Array ou já foi removido!');
   };
 
@@ -68,7 +69,6 @@ const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
               ) : (
                 <View style={styles.boxEdit}>
                   <TextInput
-                    autoFocus={true}
                     style={styles.textModal}
                     placeholder={`Deck de ${itensDecks.deckname}`}
                     placeholderTextColor="#fff"
@@ -121,7 +121,7 @@ const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
                             style={styles.buttonEditCard}
                             onPress={() => removeCard(item)}>
                             <Text style={styles.textButtonEditCard}>
-                              remover
+                              remove card
                             </Text>
                           </TouchableOpacity>
                         ) : null}
