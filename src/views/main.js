@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  Button,
   Modal,
   Image,
-  ScrollView,
+  TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../store';
@@ -21,13 +20,13 @@ const Main = ({navigation}) => {
   const [isDeck, setIsDeck] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [deckRemove, setDeckRemove] = useState(false);
+  const [cardsRemove, setCardsRemove] = useState(false);
   const [deckVisible, setDeckVisible] = useState([]);
+  const [decknameEdit, setDecknameEdit] = useState('');
 
   useEffect(() => {
     decks.length > 0 ? setIsDeck(true) : setIsDeck(false);
   }, [decks]);
-
-  // se clicar em - ou excluir deck habilita um x nos botões e clica neles
 
   const goToRegisterDeck = () => {
     navigation.navigate('RegisterDeck');
@@ -36,24 +35,43 @@ const Main = ({navigation}) => {
   const entrar = (item) => {
     setModalVisible(true);
     setDeckVisible(item);
+    setDecknameEdit(item.deckname);
   };
 
   const sair = () => {
     setModalVisible(false);
-    setDeckRemove(false);
+    setCardsRemove(false);
   };
 
-  console.log('decks', decks);
-
   const removeDeck = () => {
-    console.log('deckVisible', deckVisible);
-    console.log('deckVisible', decks.indexOf(deckVisible));
     decks.splice(decks.indexOf(deckVisible), 1);
     setDeckRemove(true);
   };
 
+  const renameDeck = (e) => {
+    decks.indexOf(deckVisible) >= 0
+      ? decks.splice(decks.indexOf(deckVisible), 1, {
+          deckname: e.nativeEvent.text,
+          cards: deckVisible.cards,
+        })
+      : console.warn('Item não existe no Array ou já foi removido!');
+  };
+
+  const removeCard = (item) => {
+    deckVisible.cards.indexOf(item) >= 0
+      ? deckVisible.cards.splice(deckVisible.cards.indexOf(item), 1)
+      : console.warn('Item não existe no Array ou já foi removido!');
+  };
+
+  const editDeck = () => {
+    setCardsRemove(true);
+  };
+
+  const addMoreCards = () => {
+    console.log('Estou aqui');
+  };
+
   const renderItem = ({item}) => {
-    console.log(item.deckname);
     return (
       <View key={item.index} style={styles.deckLink}>
         <TouchableOpacity style={styles.buttonAdd} onPress={() => entrar(item)}>
@@ -99,16 +117,47 @@ const Main = ({navigation}) => {
                 onPress={sair}>
                 <Icon name="close" style={styles.play} />
               </TouchableOpacity>
+
               {!deckRemove ? (
                 <>
-                  <Text style={styles.textModal}>
-                    Deck de {deckVisible.deckname}
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.btnRemove}
-                    onPress={() => removeDeck()}>
-                    <Text style={styles.textRemove}>Remover Deck</Text>
-                  </TouchableOpacity>
+                  {!cardsRemove ? (
+                    <Text style={styles.textModal}>Deck de {decknameEdit}</Text>
+                  ) : (
+                    <View style={styles.boxEdit}>
+                      <TextInput
+                        autoFocus={true}
+                        style={styles.textModal}
+                        placeholder={`Deck de ${deckVisible.deckname}`}
+                        placeholderTextColor="#fff"
+                        maxLength={20}
+                        onBlur={(e) => renameDeck(e)}
+                      />
+                      <Icon name="edit" style={styles.editName} />
+                    </View>
+                  )}
+
+                  <View style={styles.boxEdit}>
+                    {cardsRemove ? (
+                      <TouchableOpacity
+                        style={styles.btnRemove}
+                        onPress={() => addMoreCards()}>
+                        <Text style={styles.textRemove}>+ Cards</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        style={styles.btnRemove}
+                        onPress={() => editDeck()}>
+                        <Text style={styles.textRemove}>Edit Deck</Text>
+                      </TouchableOpacity>
+                    )}
+
+                    <TouchableOpacity
+                      style={styles.btnRemove}
+                      onPress={() => removeDeck()}>
+                      <Text style={styles.textRemove}>Remove Deck</Text>
+                    </TouchableOpacity>
+                  </View>
+
                   <View style={styles.cardSelected}>
                     {decks.length > 0 &&
                     modalVisible &&
@@ -131,6 +180,16 @@ const Main = ({navigation}) => {
                                 source={{uri: item.image_uris.normal}}
                               />
                             </TouchableOpacity>
+
+                            {cardsRemove ? (
+                              <TouchableOpacity
+                                style={styles.buttonEditCard}
+                                onPress={() => removeCard(item)}>
+                                <Text style={styles.textButtonEditCard}>
+                                  remover
+                                </Text>
+                              </TouchableOpacity>
+                            ) : null}
                           </View>
                         )}
                       />
@@ -229,6 +288,7 @@ const styles = StyleSheet.create({
 
   modal: {
     flex: 1,
+    minWidth: '90%',
     backgroundColor: '#392a42',
     borderRadius: 20,
     padding: 5,
@@ -258,7 +318,7 @@ const styles = StyleSheet.create({
   cardSelected: {
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: 120,
+    paddingBottom: 160,
   },
   imgCard: {
     width: 160,
@@ -270,8 +330,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
     backgroundColor: '#000',
-    margin: 12,
+    margin: 2,
     borderRadius: 5,
+    padding: 5,
   },
 
   textRemove: {
@@ -286,8 +347,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 25,
   },
+
   textDeck: {
     fontSize: 25,
     color: '#FFFFFF',
+  },
+
+  buttonEditCard: {
+    alignItems: 'center',
+    marginTop: 5,
+    backgroundColor: '#5e4f67',
+    margin: 2,
+    borderRadius: 5,
+  },
+  textButtonEditCard: {
+    fontSize: 16,
+    padding: 5,
+    color: '#FFFFFF',
+  },
+
+  boxEdit: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+
+  editName: {
+    color: '#fff',
+    fontSize: 32,
+    marginLeft: 5,
+    lineHeight: 32,
   },
 });

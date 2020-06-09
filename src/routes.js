@@ -1,12 +1,9 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import Main from './views/main';
-import Cards from './views/cards';
-import InfoCard from './views/infocard';
-import Deck from './views/deck';
-import ListDeck from './views/listdeck';
 import RegisterDeck from './views/registerdeck';
 import SelectCard from './views/selectcard';
+import InfoCard from './views/infocard';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -21,50 +18,6 @@ const Routes = () => {
           component={Main}
           options={{
             title: 'Home',
-            headerStyle: {
-              backgroundColor: '#1d1c25',
-            },
-            headerTintColor: '#FFF',
-          }}
-        />
-        <Stack.Screen
-          name="Cards"
-          component={Cards}
-          options={{
-            title: 'Cartas',
-            headerStyle: {
-              backgroundColor: '#1d1c25',
-            },
-            headerTintColor: '#FFF',
-          }}
-        />
-        <Stack.Screen
-          name="InfoCard"
-          component={InfoCard}
-          options={{
-            title: 'Info Cards',
-            headerStyle: {
-              backgroundColor: '#1d1c25',
-            },
-            headerTintColor: '#FFF',
-          }}
-        />
-        <Stack.Screen
-          name="Deck"
-          component={Deck}
-          options={{
-            title: 'Deck Created',
-            headerStyle: {
-              backgroundColor: '#1d1c25',
-            },
-            headerTintColor: '#FFF',
-          }}
-        />
-        <Stack.Screen
-          name="ListDeck"
-          component={ListDeck}
-          options={{
-            title: 'List Decks',
             headerStyle: {
               backgroundColor: '#1d1c25',
             },
@@ -87,6 +40,17 @@ const Routes = () => {
           component={SelectCard}
           options={{
             title: 'Select Deck',
+            headerStyle: {
+              backgroundColor: '#1d1c25',
+            },
+            headerTintColor: '#FFF',
+          }}
+        />
+        <Stack.Screen
+          name="InfoCard"
+          component={InfoCard}
+          options={{
+            title: 'Info Cards',
             headerStyle: {
               backgroundColor: '#1d1c25',
             },
