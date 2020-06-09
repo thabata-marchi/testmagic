@@ -1,5 +1,5 @@
 import {useEffect, useCallback, useState} from 'react';
-import api from './api';
+import api from '../services/api';
 
 const useDataApi = () => {
   const [deckCard, setDeckCard] = useState([]);

@@ -11,7 +11,7 @@ import {
   Modal,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import useDataApi from '../../src/services/useDataApi';
+import useDataApi from '../hooks/useDataApi';
 import {store} from '../store';
 
 const SelectCard = ({navigation, route}) => {

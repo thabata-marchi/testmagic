@@ -10,7 +10,7 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import useDataApi from '../../src/services/useDataApi';
+import useDataApi from '../hooks/useDataApi';
 
 const SelectCard = () => {
   const data = useDataApi();
