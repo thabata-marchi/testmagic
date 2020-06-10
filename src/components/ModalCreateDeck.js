@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import modal from '../assets/modal';
+import cards from '../assets/cards';
 
 import {store} from '../store';
 
@@ -38,10 +40,10 @@ const ModalCreateDeck = ({
 
   return (
     <Modal transparent={true} animationType="slide" visible={modalVisible}>
-      <View style={styles.modalCentered}>
-        <View style={styles.modal}>
-          <TouchableOpacity style={styles.close} title="Sair" onPress={sair}>
-            <Icon name="close" style={styles.play} />
+      <View style={modal.modalCentered}>
+        <View style={modal.modal}>
+          <TouchableOpacity style={modal.close} title="Sair" onPress={sair}>
+            <Icon name="close" style={modal.iconClose} />
           </TouchableOpacity>
           <Text style={styles.textStartGo}>
             Confirma a criação do DECK de {deckname}?
@@ -62,20 +64,19 @@ const ModalCreateDeck = ({
               <Icon name="edit" style={styles.startGo} />
             </TouchableOpacity>
           </View>
-
-          <FlatList
-            data={cardSelect}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            renderItem={({item}) => (
-              <View style={styles.cards}>
+          <View style={styles.cardSelected}>
+            <FlatList
+              data={cardSelect}
+              keyExtractor={(item) => item.id}
+              numColumns={2}
+              renderItem={({item}) => (
                 <Image
-                  style={styles.imgCard}
+                  style={cards.imgCard}
                   source={{uri: item.image_uris.normal}}
                 />
-              </View>
-            )}
-          />
+              )}
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -109,75 +110,27 @@ const styles = StyleSheet.create({
   },
   startGo: {
     color: '#fff',
-    fontSize: 32,
-    marginRight: 5,
-    lineHeight: 38,
+    fontSize: 25,
+    marginLeft: 5,
   },
 
   textStartGo: {
     color: '#FFFFFF',
     fontSize: 25,
-    lineHeight: 33,
     textAlign: 'center',
     margin: 10,
   },
 
   btnTextStartGo: {
     color: '#FFFFFF',
-    fontSize: 18,
-    lineHeight: 33,
+    fontSize: 16,
+    lineHeight: 20,
     textAlign: 'center',
   },
 
-  cards: {
-    margin: 10,
-  },
-  imgCard: {
-    width: 160,
-    height: 220,
-  },
   cardSelected: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-
-  modalCentered: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 110,
-    paddingBottom: 30,
-  },
-
-  modal: {
-    flex: 1,
-    backgroundColor: '#392a42',
-    borderRadius: 20,
-    padding: 5,
-    paddingLeft: 30,
-    paddingRight: 30,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-
-  close: {
-    fontSize: 20,
-    alignItems: 'flex-end',
-    marginRight: -20,
-    marginTop: -10,
-  },
-
-  play: {
-    color: '#fff',
-    paddingLeft: 14,
-    paddingTop: 14,
-    fontSize: 32,
   },
 });
 

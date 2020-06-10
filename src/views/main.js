@@ -7,16 +7,15 @@ import {
   View,
   FlatList,
 } from 'react-native';
+import buttons from '../assets/buttons';
 
 import ModalDeck from '../components/ModalDeck';
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../store';
 
 const Main = ({navigation}) => {
   const globalState = useContext(store);
   const {decks} = globalState;
-
   const [isDeck, setIsDeck] = useState(false);
   const [itensDecks, setItensDecks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,13 +38,16 @@ const Main = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <View style={styles.addDecks}>
-          <TouchableOpacity style={styles.btnPlay} onPress={goToRegisterDeck}>
-            <Icon name="add" style={styles.play} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.boxDecks}>
-          <Text style={styles.h1}>Meus Decks</Text>
+          <View style={styles.addDecks}>
+            <Text style={styles.h1}>Meus Decks</Text>
+            <TouchableOpacity
+              style={buttons.btnIcon}
+              onPress={goToRegisterDeck}>
+              <Icon name="add" style={buttons.icon} />
+            </TouchableOpacity>
+          </View>
+
           {decks.length > 0 && isDeck ? (
             <>
               <Text style={styles.textDecks}>
@@ -87,33 +89,22 @@ export default Main;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
     backgroundColor: '#1d1c25',
+    padding: 10,
   },
   addDecks: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
   h1: {
     fontSize: 30,
-    margin: 20,
+    margin: 10,
     color: '#FFF',
     fontFamily: 'Helvetica Neue',
     textAlign: 'center',
-  },
-  btnPlay: {
-    backgroundColor: '#5e4f67',
-    borderRadius: 50,
-    width: 60,
-    height: 60,
-    margin: 5,
-  },
-  play: {
-    color: '#fff',
-    paddingLeft: 14,
-    paddingTop: 14,
-    fontSize: 32,
   },
   editDeck: {
     color: '#fff',
@@ -121,14 +112,13 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   boxDecks: {
-    flex: 2,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   textDecks: {
     color: '#fff',
-    marginBottom: 10,
-    fontSize: 20,
+    marginBottom: 20,
+    fontSize: 16,
   },
   deckLink: {
     backgroundColor: '#5e4f67',

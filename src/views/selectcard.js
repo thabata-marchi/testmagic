@@ -114,20 +114,15 @@ const styles = StyleSheet.create({
   },
   btnStartGo: {
     backgroundColor: '#5e4f67',
-    justifyContent: 'flex-end',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     borderRadius: 8,
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingBottom: 5,
-    marginBottom: 10,
+    padding: 5,
+    marginBottom: 20,
   },
   startGo: {
     color: '#fff',
     fontSize: 32,
-    marginRight: 5,
-    lineHeight: 38,
   },
 
   boxAddRemove: {
@@ -161,7 +156,6 @@ const styles = StyleSheet.create({
   btnTextStartGo: {
     color: '#FFFFFF',
     fontSize: 18,
-    lineHeight: 33,
     textAlign: 'center',
   },
 

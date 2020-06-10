@@ -10,7 +10,8 @@ import {
   TextInput,
 } from 'react-native';
 import SearchCards from './SearchCards';
-
+import modal from '../assets/modal';
+import cards from '../assets/cards';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../store';
 
@@ -30,11 +31,11 @@ const ModalDeck = ({
   const [cardSelect, setCardSelect] = useState([]);
 
   const sair = () => {
-    setVisible(false);
     setCardsRemove(false);
     setDeckRemove(false);
     setCardSelect([]);
     setAddCards(false);
+    setVisible(false);
   };
 
   const removeDeck = () => {
@@ -74,10 +75,10 @@ const ModalDeck = ({
 
   return (
     <Modal transparent={true} animationType="slide" visible={visible}>
-      <View style={styles.modalCentered}>
-        <View style={styles.modal}>
-          <TouchableOpacity style={styles.close} title="Sair" onPress={sair}>
-            <Icon name="close" style={styles.play} />
+      <View style={modal.modalCentered}>
+        <View style={modal.modal}>
+          <TouchableOpacity style={modal.close} title="Sair" onPress={sair}>
+            <Icon name="close" style={modal.iconClose} />
           </TouchableOpacity>
 
           {!deckRemove ? (
@@ -112,11 +113,20 @@ const ModalDeck = ({
                   </TouchableOpacity>
                 )}
 
-                <TouchableOpacity
-                  style={styles.btnRemove}
-                  onPress={() => removeDeck()}>
-                  <Text style={styles.textRemove}>Remove Deck</Text>
-                </TouchableOpacity>
+                {addCards ? (
+                  <TouchableOpacity
+                    style={styles.save}
+                    title="Sair"
+                    onPress={save}>
+                    <Text style={styles.textSave}>Save edit</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.btnRemove}
+                    onPress={() => removeDeck()}>
+                    <Text style={styles.textRemove}>Remove Deck</Text>
+                  </TouchableOpacity>
+                )}
               </View>
 
               {!addCards ? (
@@ -129,15 +139,15 @@ const ModalDeck = ({
                       keyExtractor={(item) => item.id}
                       numColumns={2}
                       renderItem={({item}) => (
-                        <View style={styles.cards}>
+                        <View style={cards.cards}>
                           <TouchableOpacity>
                             <Image
-                              style={styles.imgCard}
+                              style={cards.imgCard}
                               source={{uri: item.image_uris.normal}}
                             />
                           </TouchableOpacity>
 
-                          {cardsRemove ? (
+                          {cardsRemove && addCards ? (
                             <TouchableOpacity
                               style={styles.buttonEditCard}
                               onPress={() => removeCard(item)}>
@@ -154,22 +164,14 @@ const ModalDeck = ({
                   )}
                 </View>
               ) : (
-                <>
-                  <TouchableOpacity
-                    style={styles.save}
-                    title="Sair"
-                    onPress={save}>
-                    <Text style={styles.textSave}>SAVE</Text>
-                  </TouchableOpacity>
-                  <View style={styles.boxSearch}>
-                    <SearchCards
-                      cardSelect={cardSelect}
-                      setCardSelect={setCardSelect}
-                      navigation={navigation}
-                      sair={sair}
-                    />
-                  </View>
-                </>
+                <View style={styles.boxSearch}>
+                  <SearchCards
+                    cardSelect={cardSelect}
+                    setCardSelect={setCardSelect}
+                    navigation={navigation}
+                    sair={sair}
+                  />
+                </View>
               )}
             </>
           ) : (
@@ -184,122 +186,116 @@ const ModalDeck = ({
 };
 
 const styles = StyleSheet.create({
-  play: {
-    color: '#fff',
-    paddingLeft: 14,
-    paddingTop: 14,
-    fontSize: 32,
-  },
   editDeck: {
     color: '#fff',
     paddingLeft: 6,
     fontSize: 25,
   },
-  modalCentered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 110,
-    paddingBottom: 30,
-  },
-  modal: {
-    flex: 1,
-    minWidth: '90%',
-    backgroundColor: '#392a42',
-    borderRadius: 20,
-    padding: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  close: {
-    fontSize: 20,
-    alignItems: 'flex-end',
-    marginRight: 10,
-  },
+
   textModal: {
     color: '#FFF',
     textAlign: 'center',
-    fontSize: 30,
-    marginBottom: 5,
+    fontSize: 25,
+    lineHeight: 28,
+    marginTop: 10,
+    marginBottom: 20,
   },
+
   cardSelected: {
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingBottom: 160,
   },
-  imgCard: {
-    width: 160,
-    height: 220,
-    margin: 10,
-  },
+
   btnRemove: {
     alignItems: 'center',
-    marginTop: 5,
     backgroundColor: '#000',
     margin: 2,
     borderRadius: 5,
-    padding: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
   },
+
   textRemove: {
-    fontSize: 20,
-    padding: 5,
+    fontSize: 16,
+    padding: 9,
     color: '#FFFFFF',
   },
+
   messageRemove: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 25,
   },
+
   textDeck: {
     fontSize: 25,
     color: '#FFFFFF',
+    textAlign: 'center',
   },
+
   buttonEditCard: {
     alignItems: 'center',
     marginTop: 5,
     backgroundColor: '#5e4f67',
     margin: 2,
     borderRadius: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
   },
+
   textButtonEditCard: {
     fontSize: 16,
     padding: 5,
     color: '#FFFFFF',
   },
+
   boxEdit: {
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'center',
     marginBottom: 10,
   },
+
   editName: {
     color: '#fff',
-    fontSize: 32,
+    fontSize: 22,
     marginLeft: 5,
-    lineHeight: 32,
-  },
-
-  boxSearch: {
-    maxHeight: 495,
+    paddingTop: 13,
   },
 
   save: {
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 8,
+    alignItems: 'center',
     backgroundColor: '#5e4f67',
+    margin: 2,
+    borderRadius: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
   },
+
   textSave: {
-    textAlign: 'center',
-    fontSize: 20,
-    color: '#FFF',
+    fontSize: 16,
+    padding: 9,
+    color: '#FFFFFF',
   },
 });
 

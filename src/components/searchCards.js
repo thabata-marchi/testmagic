@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../hooks/useDataApi';
+import buttons from '../assets/buttons';
 
 const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
   const data = useDataApi();
@@ -18,7 +19,7 @@ const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const goToInfo = (item) => {
-    sair();
+    sair;
     navigation.navigate('InfoCard', {cardmagic: item});
   };
 
@@ -53,13 +54,12 @@ const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={() => saveSelect(item)}>
-          <Text style={styles.textAdd}>adicionar</Text>
+          <Text style={styles.textAdd}>add</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={() => removeSelect(item)}>
-          <Text style={styles.textAdd}>remover</Text>
+          <Text style={styles.textAdd}>remove</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -69,13 +69,13 @@ const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
     <>
       <View style={styles.search}>
         <TextInput
-          style={styles.searchCards}
+          style={buttons.input}
           placeholder={'Escolha as cartas'}
           placeholderTextColor="#fff"
           onChangeText={(text) => setTextInput(text)}
         />
-        <TouchableOpacity style={styles.btnArrow} onPress={goSearch}>
-          <Icon name="search" style={styles.arrow} />
+        <TouchableOpacity style={buttons.btnIcon} onPress={goSearch}>
+          <Icon name="search" style={buttons.icon} />
         </TouchableOpacity>
       </View>
 
@@ -101,37 +101,15 @@ const styles = StyleSheet.create({
   },
   search: {
     flexDirection: 'row',
+    alignContent: 'center',
   },
   cardsBox: {
     padding: 10,
     borderRadius: 8,
     marginBottom: 20,
-  },
-  searchCards: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: '#5e4f67',
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
-    backgroundColor: '#242031',
-    color: '#D7D7D7',
-    fontSize: 20,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    opacity: 0.5,
-  },
-  btnArrow: {
-    backgroundColor: '#5e4f67',
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
-    width: 60,
-    height: 60,
-  },
-  arrow: {
-    color: '#fff',
-    paddingLeft: 10,
-    paddingTop: 12,
-    fontSize: 38,
+    marginTop: 10,
+    paddingBottom: 20,
+    alignItems: 'center',
   },
   startGo: {
     color: '#fff',
@@ -151,6 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5e4f67',
     margin: 2,
     borderRadius: 5,
+    minWidth: 55,
   },
   textAdd: {
     fontSize: 16,
@@ -168,8 +147,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   imgCard: {
-    width: 160,
-    height: 220,
+    width: 130,
+    height: 180,
   },
 });
 
