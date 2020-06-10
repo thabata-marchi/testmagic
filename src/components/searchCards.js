@@ -11,11 +11,16 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../hooks/useDataApi';
 
-const SearchCards = ({navigation, cardSelect, setCardSelect}) => {
+const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
   const data = useDataApi();
   const [textInput, setTextInput] = useState('');
   const [clicked, setClicked] = useState(false);
   const [cardsAdd, setCardsAdd] = useState([]);
+
+  const goToInfo = (item) => {
+    sair();
+    navigation.navigate('InfoCard', {cardmagic: item});
+  };
 
   const saveSelect = (item) => {
     cardSelect.indexOf(item) >= 0
@@ -41,10 +46,7 @@ const SearchCards = ({navigation, cardSelect, setCardSelect}) => {
 
   const renderItem = ({item, index}) => (
     <View style={styles.cards} key={index}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('InfoCard', {cardmagic: item});
-        }}>
+      <TouchableOpacity onPress={() => goToInfo(item)}>
         <Image style={styles.imgCard} source={{uri: item.image_uris.normal}} />
       </TouchableOpacity>
       <View style={styles.boxAddRemove}>
@@ -101,7 +103,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   cardsBox: {
-    maxHeight: 490,
     padding: 10,
     borderRadius: 8,
     marginBottom: 20,

@@ -69,18 +69,10 @@ const ModalCreateDeck = ({
             numColumns={2}
             renderItem={({item}) => (
               <View style={styles.cards}>
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() => {
-                    navigation.navigate('InfoCard', {
-                      cardmagic: item,
-                    });
-                  }}>
-                  <Image
-                    style={styles.imgCard}
-                    source={{uri: item.image_uris.normal}}
-                  />
-                </TouchableOpacity>
+                <Image
+                  style={styles.imgCard}
+                  source={{uri: item.image_uris.normal}}
+                />
               </View>
             )}
           />

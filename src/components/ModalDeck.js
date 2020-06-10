@@ -26,9 +26,7 @@ const ModalDeck = ({
 
   const [deckRemove, setDeckRemove] = useState(false);
   const [cardsRemove, setCardsRemove] = useState(false);
-
   const [addCards, setAddCards] = useState(false);
-
   const [cardSelect, setCardSelect] = useState([]);
 
   const sair = () => {
@@ -168,6 +166,7 @@ const ModalDeck = ({
                       cardSelect={cardSelect}
                       setCardSelect={setCardSelect}
                       navigation={navigation}
+                      sair={sair}
                     />
                   </View>
                 </>
@@ -287,7 +286,9 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
 
-  boxSearch: {},
+  boxSearch: {
+    maxHeight: 495,
+  },
 
   save: {
     marginBottom: 10,

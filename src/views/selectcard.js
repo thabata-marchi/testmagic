@@ -22,11 +22,13 @@ const SelectCard = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchCards
-        cardSelect={cardSelect}
-        setCardSelect={setCardSelect}
-        navigation={navigation}
-      />
+      <View style={styles.searchBox}>
+        <SearchCards
+          cardSelect={cardSelect}
+          setCardSelect={setCardSelect}
+          navigation={navigation}
+        />
+      </View>
 
       {cardSelect.length > 0 ? (
         <>
@@ -57,6 +59,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#1d1c25',
   },
+  searchBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    marginTop: 20,
+  },
   h1: {
     fontSize: 30,
     margin: 30,
@@ -65,12 +74,7 @@ const styles = StyleSheet.create({
   search: {
     flexDirection: 'row',
   },
-  cardsBox: {
-    height: 530,
-    padding: 5,
-    borderRadius: 8,
-    marginBottom: 20,
-  },
+
   searchCards: {
     borderWidth: 2,
     borderColor: '#5e4f67',
@@ -113,10 +117,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    padding: 10,
     borderRadius: 8,
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingBottom: 5,
     marginBottom: 10,
-    margin: 5,
   },
   startGo: {
     color: '#fff',
