@@ -13,6 +13,7 @@ const modal = StyleSheet.create({
   modal: {
     flex: 1,
     width: '100%',
+    paddingBottom: 40,
   },
 
   close: {

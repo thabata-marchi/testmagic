@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   cardSelected: {
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 140,
   },
 });
 

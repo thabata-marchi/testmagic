@@ -78,6 +78,7 @@ const Main = ({navigation}) => {
           visible={modalVisible}
           setVisible={setModalVisible}
           decknameEdit={decknameEdit}
+          setDecknameEdit={setDecknameEdit}
         />
       </SafeAreaView>
     </>

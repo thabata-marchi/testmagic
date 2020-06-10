@@ -21,6 +21,7 @@ const ModalDeck = ({
   visible,
   setVisible,
   decknameEdit,
+  setDecknameEdit,
 }) => {
   const globalState = useContext(store);
   const {decks} = globalState;
@@ -29,6 +30,8 @@ const ModalDeck = ({
   const [cardsRemove, setCardsRemove] = useState(false);
   const [addCards, setAddCards] = useState(false);
   const [cardSelect, setCardSelect] = useState([]);
+  const [deckname, setDeckname] = useState('');
+  const [saveEditDeck, setSaveEditDeck] = useState(false);
 
   const sair = () => {
     setCardsRemove(false);
@@ -36,6 +39,7 @@ const ModalDeck = ({
     setCardSelect([]);
     setAddCards(false);
     setVisible(false);
+    setSaveEditDeck(false);
   };
 
   const removeDeck = () => {
@@ -43,19 +47,24 @@ const ModalDeck = ({
     setDeckRemove(true);
   };
 
-  const renameDeck = (e) => {
-    decks.indexOf(itensDecks) >= 0
-      ? decks.splice(decks.indexOf(itensDecks), 1, {
-          deckname: e.nativeEvent.text,
+  const renameDeck = () => {
+    decks.indexOf(itensDecks) >= 0 && saveEditDeck
+      ? (setDecknameEdit(deckname),
+        decks.splice(decks.indexOf(itensDecks), 1, {
+          deckname: deckname,
           cards: itensDecks.cards,
-        })
+        }))
       : console.warn('Item não existe no Array ou já foi removido!');
   };
 
+  const saveEdit = () => {
+    setCardsRemove(false);
+    setSaveEditDeck(true);
+  };
+
   const removeCard = (item) => {
-    itensDecks.cards.indexOf(item) >= 0
-      ? (itensDecks.cards.splice(itensDecks.cards.indexOf(item), 1),
-        setCardsRemove(false))
+    itensDecks.cards.indexOf(item) >= 0 && saveEditDeck
+      ? itensDecks.cards.splice(itensDecks.cards.indexOf(item), 1)
       : console.warn('Item não existe no Array ou já foi removido!');
   };
 
@@ -92,19 +101,28 @@ const ModalDeck = ({
                     placeholder={`Deck de ${itensDecks.deckname}`}
                     placeholderTextColor="#fff"
                     maxLength={20}
-                    onBlur={(e) => renameDeck(e)}
+                    onChangeText={(e) => setDeckname(e)}
+                    onBlur={renameDeck}
                   />
                   <Icon name="edit" style={styles.editName} />
                 </View>
               )}
 
               <View style={styles.boxEdit}>
-                {cardsRemove ? (
-                  <TouchableOpacity
-                    style={styles.btnRemove}
-                    onPress={() => addMoreCards()}>
-                    <Text style={styles.textRemove}>+ Cards</Text>
-                  </TouchableOpacity>
+                {cardsRemove && !addCards ? (
+                  <>
+                    <TouchableOpacity
+                      style={styles.btnRemove}
+                      onPress={() => addMoreCards()}>
+                      <Text style={styles.textRemove}>+ Cards</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.save}
+                      title="Sair"
+                      onPress={saveEdit}>
+                      <Text style={styles.textSave}>Save edit</Text>
+                    </TouchableOpacity>
+                  </>
                 ) : (
                   <TouchableOpacity
                     style={styles.btnRemove}
@@ -118,7 +136,7 @@ const ModalDeck = ({
                     style={styles.save}
                     title="Sair"
                     onPress={save}>
-                    <Text style={styles.textSave}>Save edit</Text>
+                    <Text style={styles.textSave}>Save cards</Text>
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
@@ -147,7 +165,7 @@ const ModalDeck = ({
                             />
                           </TouchableOpacity>
 
-                          {cardsRemove && addCards ? (
+                          {cardsRemove && !addCards ? (
                             <TouchableOpacity
                               style={styles.buttonEditCard}
                               onPress={() => removeCard(item)}>
