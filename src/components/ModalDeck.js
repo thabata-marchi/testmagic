@@ -9,20 +9,34 @@ import {
   Image,
   TextInput,
 } from 'react-native';
+import SearchCards from './SearchCards';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {store} from '../store';
 
-const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
+const ModalDeck = ({
+  navigation,
+  itensDecks,
+  visible,
+  setVisible,
+  decknameEdit,
+}) => {
   const globalState = useContext(store);
   const {decks} = globalState;
 
   const [deckRemove, setDeckRemove] = useState(false);
   const [cardsRemove, setCardsRemove] = useState(false);
 
+  const [addCards, setAddCards] = useState(false);
+
+  const [cardSelect, setCardSelect] = useState([]);
+
   const sair = () => {
     setVisible(false);
     setCardsRemove(false);
     setDeckRemove(false);
+    setCardSelect([]);
+    setAddCards(false);
   };
 
   const removeDeck = () => {
@@ -51,7 +65,13 @@ const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
   };
 
   const addMoreCards = () => {
-    console.log('Estou aqui');
+    setCardSelect([]);
+    setAddCards(true);
+  };
+
+  const save = () => {
+    Array.prototype.push.apply(itensDecks.cards, cardSelect);
+    setAddCards(false);
   };
 
   return (
@@ -101,37 +121,57 @@ const ModalDeck = ({itensDecks, visible, setVisible, decknameEdit}) => {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.cardSelected}>
-                {decks.length > 0 && visible && itensDecks.cards.length > 0 ? (
-                  <FlatList
-                    data={itensDecks.cards}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    renderItem={({item}) => (
-                      <View style={styles.cards}>
-                        <TouchableOpacity>
-                          <Image
-                            style={styles.imgCard}
-                            source={{uri: item.image_uris.normal}}
-                          />
-                        </TouchableOpacity>
-
-                        {cardsRemove ? (
-                          <TouchableOpacity
-                            style={styles.buttonEditCard}
-                            onPress={() => removeCard(item)}>
-                            <Text style={styles.textButtonEditCard}>
-                              remove card
-                            </Text>
+              {!addCards ? (
+                <View style={styles.cardSelected}>
+                  {decks.length > 0 &&
+                  visible &&
+                  itensDecks.cards.length > 0 ? (
+                    <FlatList
+                      data={itensDecks.cards}
+                      keyExtractor={(item) => item.id}
+                      numColumns={2}
+                      renderItem={({item}) => (
+                        <View style={styles.cards}>
+                          <TouchableOpacity>
+                            <Image
+                              style={styles.imgCard}
+                              source={{uri: item.image_uris.normal}}
+                            />
                           </TouchableOpacity>
-                        ) : null}
-                      </View>
-                    )}
-                  />
-                ) : (
-                  <Text>Este Deck não possui cartas</Text>
-                )}
-              </View>
+
+                          {cardsRemove ? (
+                            <TouchableOpacity
+                              style={styles.buttonEditCard}
+                              onPress={() => removeCard(item)}>
+                              <Text style={styles.textButtonEditCard}>
+                                remove card
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                        </View>
+                      )}
+                    />
+                  ) : (
+                    <Text>Este Deck não possui cartas</Text>
+                  )}
+                </View>
+              ) : (
+                <>
+                  <TouchableOpacity
+                    style={styles.save}
+                    title="Sair"
+                    onPress={save}>
+                    <Text style={styles.textSave}>SAVE</Text>
+                  </TouchableOpacity>
+                  <View style={styles.boxSearch}>
+                    <SearchCards
+                      cardSelect={cardSelect}
+                      setCardSelect={setCardSelect}
+                      navigation={navigation}
+                    />
+                  </View>
+                </>
+              )}
             </>
           ) : (
             <View style={styles.messageRemove}>
@@ -245,6 +285,20 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginLeft: 5,
     lineHeight: 32,
+  },
+
+  boxSearch: {},
+
+  save: {
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#5e4f67',
+  },
+  textSave: {
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#FFF',
   },
 });
 

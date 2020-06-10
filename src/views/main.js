@@ -70,6 +70,7 @@ const Main = ({navigation}) => {
           ) : null}
         </View>
         <ModalDeck
+          navigation={navigation}
           itensDecks={itensDecks}
           visible={modalVisible}
           setVisible={setModalVisible}
