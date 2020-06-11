@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import buttons from '../assets/buttons';
@@ -17,6 +18,7 @@ const RegisterDeck = ({navigation}) => {
   };
 
   const goSelectCard = () => {
+    Keyboard.dismiss();
     navigation.navigate('SelectCard', {deckname: nameDeck});
   };
 

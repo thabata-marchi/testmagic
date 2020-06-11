@@ -7,6 +7,7 @@ import {
   Image,
   Text,
   FlatList,
+  Keyboard,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import useDataApi from '../hooks/useDataApi';
@@ -43,6 +44,7 @@ const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
   const goSearch = () => {
     setClicked(true);
     searchCards(textInput);
+    Keyboard.dismiss();
   };
 
   const renderItem = ({item, index}) => (
