@@ -31,7 +31,6 @@ const ModalDeck = ({
   const [addCards, setAddCards] = useState(false);
   const [cardSelect, setCardSelect] = useState([]);
   const [deckname, setDeckname] = useState('');
-  const [saveEditDeck, setSaveEditDeck] = useState(false);
 
   const sair = () => {
     setCardsRemove(false);
@@ -39,7 +38,6 @@ const ModalDeck = ({
     setCardSelect([]);
     setAddCards(false);
     setVisible(false);
-    setSaveEditDeck(false);
   };
 
   const removeDeck = () => {
@@ -48,23 +46,19 @@ const ModalDeck = ({
   };
 
   const renameDeck = () => {
-    decks.indexOf(itensDecks) >= 0 && saveEditDeck
+    decks.indexOf(itensDecks) >= 0
       ? (setDecknameEdit(deckname),
         decks.splice(decks.indexOf(itensDecks), 1, {
           deckname: deckname,
           cards: itensDecks.cards,
         }))
-      : console.warn('Item não existe no Array ou já foi removido!');
-  };
-
-  const saveEdit = () => {
-    setCardsRemove(false);
-    setSaveEditDeck(true);
+      : console.warn('Deu algo errado!');
   };
 
   const removeCard = (item) => {
-    itensDecks.cards.indexOf(item) >= 0 && saveEditDeck
-      ? itensDecks.cards.splice(itensDecks.cards.indexOf(item), 1)
+    itensDecks.cards.indexOf(item) >= 0
+      ? (itensDecks.cards.splice(itensDecks.cards.indexOf(item), 1),
+        setCardsRemove(false))
       : console.warn('Item não existe no Array ou já foi removido!');
   };
 
@@ -110,19 +104,11 @@ const ModalDeck = ({
 
               <View style={styles.boxEdit}>
                 {cardsRemove && !addCards ? (
-                  <>
-                    <TouchableOpacity
-                      style={styles.btnRemove}
-                      onPress={() => addMoreCards()}>
-                      <Text style={styles.textRemove}>+ Cards</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.save}
-                      title="Sair"
-                      onPress={saveEdit}>
-                      <Text style={styles.textSave}>Save edit</Text>
-                    </TouchableOpacity>
-                  </>
+                  <TouchableOpacity
+                    style={styles.btnRemove}
+                    onPress={() => addMoreCards()}>
+                    <Text style={styles.textRemove}>+ Cards</Text>
+                  </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
                     style={styles.btnRemove}
@@ -204,12 +190,6 @@ const ModalDeck = ({
 };
 
 const styles = StyleSheet.create({
-  editDeck: {
-    color: '#fff',
-    paddingLeft: 6,
-    fontSize: 25,
-  },
-
   textModal: {
     color: '#FFF',
     textAlign: 'center',
