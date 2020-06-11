@@ -45,6 +45,11 @@ const ModalDeck = ({
     setDeckRemove(true);
   };
 
+  const goToInfo = (item) => {
+    sair();
+    navigation.navigate('InfoCard', {cardmagic: item});
+  };
+
   const renameDeck = () => {
     decks.indexOf(itensDecks) >= 0
       ? (setDecknameEdit(deckname),
@@ -144,7 +149,7 @@ const ModalDeck = ({
                       numColumns={2}
                       renderItem={({item}) => (
                         <View style={cards.cards}>
-                          <TouchableOpacity>
+                          <TouchableOpacity onPress={() => goToInfo(item)}>
                             <Image
                               style={cards.imgCard}
                               source={{uri: item.image_uris.normal}}

@@ -20,7 +20,7 @@ const SearchCards = ({navigation, cardSelect, setCardSelect, sair}) => {
   const [cardsAdd, setCardsAdd] = useState([]);
 
   const goToInfo = (item) => {
-    sair;
+    sair();
     navigation.navigate('InfoCard', {cardmagic: item});
   };
 
