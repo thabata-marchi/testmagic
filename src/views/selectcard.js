@@ -20,6 +20,10 @@ const SelectCard = ({navigation, route}) => {
     setModalVisible(true);
   };
 
+  const sair = () => {
+    setModalVisible(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBox}>
@@ -27,6 +31,7 @@ const SelectCard = ({navigation, route}) => {
           cardSelect={cardSelect}
           setCardSelect={setCardSelect}
           navigation={navigation}
+          sair={sair}
         />
       </View>
 

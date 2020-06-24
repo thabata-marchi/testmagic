@@ -12,7 +12,6 @@ const reducer = (state, action) => {
         ...state,
         decks: [...state.decks, {deckname: action.name, cards: action.cards}],
       };
-
     default:
       return state;
   }
